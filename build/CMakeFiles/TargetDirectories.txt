@@ -1,0 +1,4 @@
+D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/ALL_BUILD.dir
+D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/ZERO_CHECK.dir
+D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/test_sender/CMakeFiles/test_sender.dir
+D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/test_receiver/CMakeFiles/test_receiver.dir
