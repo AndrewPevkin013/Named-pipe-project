@@ -1,97 +1,189 @@
+#include "../include/ipc_protocol.hpp"
 #include <iostream>
+#include <thread>
+#include <atomic>
 #include <string>
+#include <sstream>
+#include <chrono>
 
 #ifdef _WIN32
-	#include <windows.h>
-	typedef HANDLE PipeType;
-    #define INVALID_PIPE_VALUE INVALID_HANDLE_VALUE
+    #include <windows.h>
+    constexpr const char* PIPE_NAME = "\\\\.\\pipe\\IPCTestPipe";
 #else
-	#include <fcntl.h>
-	#include <unistd.h>
-	#include <sys/stat.h>
-
-	typedef int PipeType;
-    #define INVALID_PIPE_VALUE -1
+    #include <fcntl.h>
+    #include <unistd.h>
+    #include <sys/stat.h>
+    constexpr const char* FIFO_PATH = "/tmp/ipc_test_fifo";
 #endif
 
-const size_t BUFFER_SIZE = 1024;
-
-bool receive(PipeType pipe) {
-	char buf[BUFFER_SIZE];
-    #ifdef _WIN32
-        DWORD bytesRead = 0;
-        BOOL is_read = ReadFile(
-            pipe,
-            buf,
-            BUFFER_SIZE - 1,
-            &bytesRead,
-            NULL
-        );
-    #else
-        ssize_t bytesRead = read(pipe, buf, BUFFER_SIZE - 1);
-        bool is_read = (bytesRead > 0);
-    #endif
-
-
-    if (is_read && bytesRead > 0) {
-        buf[bytesRead] = '\0';
-        std::cout << "Bytes: " << bytesRead << " Message: " << buf << std::endl;
-        if (std::string(buf) == ":q") {
-        	return true;
+class IPCReceiver {
+public:
+    IPCReceiver() : running_(true) {
+        #ifdef _WIN32
+            pipe_ = CreateNamedPipe(
+                PIPE_NAME,
+                PIPE_ACCESS_INBOUND,
+                PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
+                PIPE_UNLIMITED_INSTANCES,
+                4096,
+                4096,
+                0,
+                NULL
+            );
+        #else
+            mkfifo(FIFO_PATH, 0666);
+            pipe_ = open(FIFO_PATH, O_RDONLY);
+        #endif
+    }
+    
+    ~IPCReceiver() {
+        running_ = false;
+        if (pipe_ != INVALID_HANDLE_VALUE) {
+            #ifdef _WIN32
+                CloseHandle(pipe_);
+            #else
+                close(pipe_);
+                unlink(FIFO_PATH);
+            #endif
         }
     }
-    return false;
-}
-
-void closePipe(PipeType pipe) {
-    #ifdef _WIN32
-        CloseHandle(pipe);
-    #else
-        ::close(pipe);
-        unlink("/tmp/myfifo");
-    #endif
-  	std::cout << "Closed" << std::endl;
-}
-
-int main(int argc, const char **argv) {
-	std::cout << "Connecting to pipe..." << std::endl;
-    PipeType pipe;
-
-    #ifdef _WIN32
-        pipe = CreateNamedPipe(
-            "\\\\.\\pipe\\NamedPipeTest",
-            PIPE_ACCESS_INBOUND,
-            PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
-            1,
-            0, 0, 0,
-            NULL
-        );
-    #else
-        const char* fifo_path = "/tmp/myfifo";
-        if (mkfifo(fifo_path, 0666) == -1) {
-            std::cout << "FIFO already exist: " << errno << std::endl;
+    
+    bool receive_fragment(IPC::Fragment& fragment) {
+        if (!receive_raw(&fragment.header, IPC::HEADER_SIZE)) {
+            return false;
         }
-        pipe = open(fifo_path, O_RDONLY);
-    #endif
-
-    if (pipe == INVALID_PIPE_VALUE) {
-    	std::cout << "Failed to open pipe." << std::endl;
+        
+        fragment.data.resize(fragment.header.fragment_size);
+        if (!receive_raw(fragment.data.data(), fragment.data.size())) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    bool is_valid() const {
+        return pipe_ != INVALID_HANDLE_VALUE;
+    }
+    
+private:
+    bool receive_raw(void* buffer, size_t size) {
         #ifdef _WIN32
-            system("pause");
+            DWORD bytes_read;
+            if (!ReadFile(pipe_, buffer, static_cast<DWORD>(size), &bytes_read, NULL)) {
+                return false;
+            }
+            return bytes_read == size;
+        #else
+            ssize_t bytes_read = read(pipe_, buffer, size);
+            return bytes_read == static_cast<ssize_t>(size);
         #endif
+    }
+    
+#ifdef _WIN32
+    HANDLE pipe_ = INVALID_HANDLE_VALUE;
+#else
+    int pipe_ = -1;
+#endif
+    std::atomic<bool> running_;
+};
+
+void message_callback(const IPC::MessageAssembler::AssembledMessage& message) {
+    if (!message.complete || message.data.empty()) {
+        return;
+    }
+    
+    std::string data_str(message.data.begin(), message.data.end());
+    
+    size_t metadata_end = data_str.find("\n\n");
+    if (metadata_end != std::string::npos) {
+        std::string metadata = data_str.substr(0, metadata_end);
+        std::cout << "\n[Callback] Received message ID: " << message.message_id << std::endl;
+        std::cout << "Metadata:\n" << metadata << std::endl;
+        
+        std::istringstream stream(metadata);
+        std::string line;
+        while (std::getline(stream, line)) {
+            size_t colon_pos = line.find(':');
+            if (colon_pos != std::string::npos) {
+                std::string key = line.substr(0, colon_pos);
+                std::string value = line.substr(colon_pos + 1);
+                std::cout << "  " << key << " = " << value << std::endl;
+            }
+        }
+        
+        size_t body_size = message.data.size() - metadata_end - 2;
+        std::cout << "Body size: " << body_size << " bytes" << std::endl;
+        
+    }
+}
+
+int main() {
+    std::cout << "IPC Receiver with TCP/IP-like reassembly" << std::endl;
+    
+    IPCReceiver receiver;
+    if (!receiver.is_valid()) {
+        std::cerr << "Failed to initialize receiver!" << std::endl;
         return 1;
     }
-
-    std::cout << "Reading message from pipe..." << std::endl;
-
-    bool is_chating_end = false;
-    while (!is_chating_end) {
-        is_chating_end = receive(pipe);
+    
+    IPC::MessageAssembler assembler;
+    std::atomic<bool> running = true;
+    
+    std::thread cleaner([&assembler, &running]() {
+        while (running) {
+            std::this_thread::sleep_for(std::chrono::seconds(30));
+            assembler.cleanup_old_messages();
+        }
+    });
+    
+    std::cout << "Waiting for messages..." << std::endl;
+    
+    size_t total_fragments_received = 0;
+    size_t total_messages_received = 0;
+    
+    try {
+        while (running) {
+            IPC::Fragment fragment;
+            
+            if (receiver.receive_fragment(fragment)) {
+                total_fragments_received++;
+                
+                bool complete = assembler.add_fragment(fragment);
+                
+                if (complete) {
+                    auto message = assembler.get_assembled_message(
+                        fragment.header.message_id);
+                    
+                    if (message.complete) {
+                        total_messages_received++;
+                        
+                        message_callback(message);
+                        
+                        std::cout << "\n[Receiver] Total: " 
+                                  << total_messages_received << " messages, "
+                                  << total_fragments_received << " fragments received" << std::endl;
+                    }
+                }
+                
+                if (total_fragments_received % 100 == 0) {
+                    std::cout << "[Receiver] Progress: " 
+                              << total_fragments_received << " fragments received" << std::endl;
+                }
+                
+            } else {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
     }
-
-	closePipe(pipe);
-    #ifdef _WIN32
-        system("pause");
-    #endif
-	return 0;
+    
+    running = false;
+    cleaner.join();
+    
+    std::cout << "\nReceiver shutdown. Final stats:" << std::endl;
+    std::cout << "Total fragments received: " << total_fragments_received << std::endl;
+    std::cout << "Total messages received: " << total_messages_received << std::endl;
+    
+    return 0;
 }
