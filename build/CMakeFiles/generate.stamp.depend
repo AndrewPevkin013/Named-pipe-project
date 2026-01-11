@@ -27,8 +27,8 @@ C:/Program Files/CMake/share/cmake-4.1/Modules/Platform/Windows-MSVC-CXX.cmake
 C:/Program Files/CMake/share/cmake-4.1/Modules/Platform/Windows-MSVC.cmake
 C:/Program Files/CMake/share/cmake-4.1/Modules/Platform/Windows.cmake
 C:/Program Files/CMake/share/cmake-4.1/Modules/Platform/WindowsPaths.cmake
-D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/CMakeLists.txt
-D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/4.1.0-rc1/CMakeCCompiler.cmake
-D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/4.1.0-rc1/CMakeCXXCompiler.cmake
-D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/4.1.0-rc1/CMakeRCCompiler.cmake
-D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/4.1.0-rc1/CMakeSystem.cmake
+C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/CMakeLists.txt
+C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/4.1.0-rc1/CMakeCCompiler.cmake
+C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/4.1.0-rc1/CMakeCXXCompiler.cmake
+C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/4.1.0-rc1/CMakeRCCompiler.cmake
+C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/4.1.0-rc1/CMakeSystem.cmake

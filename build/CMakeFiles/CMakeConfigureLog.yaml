@@ -5,7 +5,7 @@ events:
     kind: "message-v1"
     backtrace:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineSystem.cmake:212 (message)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     message: |
       The system is: Windows - 10.0.26200 - AMD64
   -
@@ -16,7 +16,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     mode: "file"
     variable: "src_in"
     description: "Path to a file."
@@ -35,6 +35,9 @@ events:
     found: "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeCCompilerId.c.in"
     search_context:
       ENV{PATH}:
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\debugCommand"
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\copilotCli"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
         - "C:\\Windows\\System32\\HWAudioDriver"
         - "C:\\Windows\\system32"
@@ -44,9 +47,8 @@ events:
         - "C:\\Windows\\System32\\OpenSSH\\"
         - "C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Program Files\\CMake\\bin"
-        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files\\Microsoft SQL Server\\150\\Tools\\Binn\\"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath"
         - "D:\\Program Files (x86)\\WinSCP\\"
@@ -55,6 +57,7 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "D:\\Program Files\\PuTTY\\"
+        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
@@ -66,7 +69,7 @@ events:
         - "C:\\Program Files\\JetBrains\\CLion 2024.2.0.1\\bin"
         - "C:\\Program Files\\JetBrains\\GoLand 2024.2.1\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\ghcup\\bin"
         - "D:\\msys64\\ucrt64\\bin"
@@ -79,7 +82,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     message: |
       Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
       Compiler:  
@@ -89,9 +92,9 @@ events:
       The output was:
       0
       ╨Т╨╡╤А╤Б╨╕╤П MSBuild 17.14.23+b0019275e ╨┤╨╗╤П .NET Framework
-      ╨б╨▒╨╛╤А╨║╨░ ╨╜╨░╤З╨░╤В╨░ 30.10.2025 2:38:41.
+      ╨б╨▒╨╛╤А╨║╨░ ╨╜╨░╤З╨░╤В╨░ 17.12.2025 11:49:29.
       
-      ╨Я╤А╨╛╨╡╨║╤В "D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\4.1.0-rc1\\CompilerIdC\\CompilerIdC.vcxproj" ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
+      ╨Я╤А╨╛╨╡╨║╤В "C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\4.1.0-rc1\\CompilerIdC\\CompilerIdC.vcxproj" ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
       PrepareForBuild:
         ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "Debug\\".
         ╨б╤В╤А╤Г╨║╤В╤Г╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╤Л╨╣ ╨▓╤Л╨▓╨╛╨┤ ╨▓╨║╨╗╤О╤З╨╡╨╜. ╨д╨╛╤А╨╝╨░╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┤╨╕╨░╨│╨╜╨╛╤Б╤В╨╕╨║╨╕ ╨║╨╛╨╝╨┐╨╕╨╗╤П╤В╨╛╤А╨░ ╨▒╤Г╨┤╨╡╤В ╨╛╤В╤А╨░╨╢╨░╤В╤М ╨╕╨╡╤А╨░╤А╤Е╨╕╤О ╨╛╤И╨╕╨▒╨╛╨║. ╨Я╨╛╨┤╤А╨╛╨▒╨╜╨╡╨╡ ╤Б╨╝. https://aka.ms/cpp/structured-output.
@@ -104,7 +107,7 @@ events:
         CMakeCCompilerId.c
       Link:
         D:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdC.lib" /MACHINE:X64 Debug\\CMakeCCompilerId.obj
-        CompilerIdC.vcxproj -> D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\4.1.0-rc1\\CompilerIdC\\CompilerIdC.exe
+        CompilerIdC.vcxproj -> C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\4.1.0-rc1\\CompilerIdC\\CompilerIdC.exe
       PostBuildEvent:
         for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
         :VCEnd
@@ -112,13 +115,13 @@ events:
       FinalizeBuildStatus:
         ╨д╨░╨╣╨╗ "Debug\\CompilerIdC.tlog\\unsuccessfulbuild" ╤Г╨┤╨░╨╗╤П╨╡╤В╤Б╤П.
         ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "Debug\\CompilerIdC.tlog\\CompilerIdC.lastbuildstate".
-      ╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\4.1.0-rc1\\CompilerIdC\\CompilerIdC.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
+      ╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\4.1.0-rc1\\CompilerIdC\\CompilerIdC.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
       
       ╨б╨▒╨╛╤А╨║╨░ ╤Г╤Б╨┐╨╡╤И╨╜╨╛ ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░.
           ╨Я╤А╨╡╨┤╤Г╨┐╤А╨╡╨╢╨┤╨╡╨╜╨╕╨╣: 0
           ╨Ю╤И╨╕╨▒╨╛╨║: 0
       
-      ╨Я╤А╨╛╤И╨╗╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╕ 00:00:04.49
+      ╨Я╤А╨╛╤И╨╗╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╕ 00:00:01.65
       
       
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -126,7 +129,7 @@ events:
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
       
       The C compiler identification is MSVC, found in:
-        D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/4.1.0-rc1/CompilerIdC/CompilerIdC.exe
+        C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/4.1.0-rc1/CompilerIdC/CompilerIdC.exe
       
   -
     kind: "find-v1"
@@ -135,7 +138,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:65 (__resolve_tool_path)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:103 (__resolve_linker_path)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     mode: "program"
     variable: "_CMAKE_TOOL_WITH_PATH"
     description: "Path to a program."
@@ -151,6 +154,9 @@ events:
       - "link"
     candidate_directories:
       - "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/"
       - "C:/Windows/System32/HWAudioDriver/"
       - "C:/Windows/System32/"
@@ -160,9 +166,7 @@ events:
       - "C:/Windows/System32/OpenSSH/"
       - "C:/Users/Administrator/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Program Files/CMake/bin/"
-      - "C:/Program Files/Git/cmd/"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/"
-      - "C:/Program Files/Java/jdk-17/bin/"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/"
       - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath/"
       - "D:/Program Files (x86)/WinSCP/"
@@ -171,6 +175,7 @@ events:
       - "C:/Program Files/dotnet/"
       - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "D:/Program Files/PuTTY/"
+      - "C:/Program Files/Git/cmd/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Microsoft VS Code/bin/"
@@ -191,6 +196,9 @@ events:
     found: "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe"
     search_context:
       ENV{PATH}:
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\debugCommand"
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\copilotCli"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
         - "C:\\Windows\\System32\\HWAudioDriver"
         - "C:\\Windows\\system32"
@@ -200,9 +208,8 @@ events:
         - "C:\\Windows\\System32\\OpenSSH\\"
         - "C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Program Files\\CMake\\bin"
-        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files\\Microsoft SQL Server\\150\\Tools\\Binn\\"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath"
         - "D:\\Program Files (x86)\\WinSCP\\"
@@ -211,6 +218,7 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "D:\\Program Files\\PuTTY\\"
+        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
@@ -222,7 +230,7 @@ events:
         - "C:\\Program Files\\JetBrains\\CLion 2024.2.0.1\\bin"
         - "C:\\Program Files\\JetBrains\\GoLand 2024.2.1\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\ghcup\\bin"
         - "D:\\msys64\\ucrt64\\bin"
@@ -236,7 +244,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:65 (__resolve_tool_path)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:104 (__resolve_linker_path)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     mode: "program"
     variable: "_CMAKE_TOOL_WITH_PATH"
     description: "Path to a program."
@@ -252,6 +260,9 @@ events:
       - "lld-link"
     candidate_directories:
       - "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/"
       - "C:/Windows/System32/HWAudioDriver/"
       - "C:/Windows/System32/"
@@ -261,9 +272,7 @@ events:
       - "C:/Windows/System32/OpenSSH/"
       - "C:/Users/Administrator/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Program Files/CMake/bin/"
-      - "C:/Program Files/Git/cmd/"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/"
-      - "C:/Program Files/Java/jdk-17/bin/"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/"
       - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath/"
       - "D:/Program Files (x86)/WinSCP/"
@@ -272,6 +281,7 @@ events:
       - "C:/Program Files/dotnet/"
       - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "D:/Program Files/PuTTY/"
+      - "C:/Program Files/Git/cmd/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Microsoft VS Code/bin/"
@@ -291,6 +301,15 @@ events:
       - "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lld-link.com"
       - "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lld-link.exe"
       - "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lld-link"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/lld-link.com"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/lld-link.exe"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/lld-link"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/lld-link.com"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/lld-link.exe"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/lld-link"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/lld-link.com"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/lld-link.exe"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/lld-link"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/lld-link.com"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/lld-link.exe"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/lld-link"
@@ -318,15 +337,9 @@ events:
       - "C:/Program Files/CMake/bin/lld-link.com"
       - "C:/Program Files/CMake/bin/lld-link.exe"
       - "C:/Program Files/CMake/bin/lld-link"
-      - "C:/Program Files/Git/cmd/lld-link.com"
-      - "C:/Program Files/Git/cmd/lld-link.exe"
-      - "C:/Program Files/Git/cmd/lld-link"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/lld-link.com"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/lld-link.exe"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/lld-link"
-      - "C:/Program Files/Java/jdk-17/bin/lld-link.com"
-      - "C:/Program Files/Java/jdk-17/bin/lld-link.exe"
-      - "C:/Program Files/Java/jdk-17/bin/lld-link"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/lld-link.com"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/lld-link.exe"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/lld-link"
@@ -351,6 +364,9 @@ events:
       - "D:/Program Files/PuTTY/lld-link.com"
       - "D:/Program Files/PuTTY/lld-link.exe"
       - "D:/Program Files/PuTTY/lld-link"
+      - "C:/Program Files/Git/cmd/lld-link.com"
+      - "C:/Program Files/Git/cmd/lld-link.exe"
+      - "C:/Program Files/Git/cmd/lld-link"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/lld-link.com"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/lld-link.exe"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/lld-link"
@@ -394,6 +410,9 @@ events:
     found: "D:/Program Files/LLVM/bin/lld-link.exe"
     search_context:
       ENV{PATH}:
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\debugCommand"
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\copilotCli"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
         - "C:\\Windows\\System32\\HWAudioDriver"
         - "C:\\Windows\\system32"
@@ -403,9 +422,8 @@ events:
         - "C:\\Windows\\System32\\OpenSSH\\"
         - "C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Program Files\\CMake\\bin"
-        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files\\Microsoft SQL Server\\150\\Tools\\Binn\\"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath"
         - "D:\\Program Files (x86)\\WinSCP\\"
@@ -414,6 +432,7 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "D:\\Program Files\\PuTTY\\"
+        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
@@ -425,7 +444,7 @@ events:
         - "C:\\Program Files\\JetBrains\\CLion 2024.2.0.1\\bin"
         - "C:\\Program Files\\JetBrains\\GoLand 2024.2.1\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\ghcup\\bin"
         - "D:\\msys64\\ucrt64\\bin"
@@ -437,7 +456,7 @@ events:
     backtrace:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     mode: "program"
     variable: "CMAKE_LINKER"
     description: "Path to a program."
@@ -453,6 +472,9 @@ events:
       - "link"
     candidate_directories:
       - "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/"
       - "C:/Windows/System32/HWAudioDriver/"
       - "C:/Windows/System32/"
@@ -462,9 +484,7 @@ events:
       - "C:/Windows/System32/OpenSSH/"
       - "C:/Users/Administrator/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Program Files/CMake/bin/"
-      - "C:/Program Files/Git/cmd/"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/"
-      - "C:/Program Files/Java/jdk-17/bin/"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/"
       - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath/"
       - "D:/Program Files (x86)/WinSCP/"
@@ -473,6 +493,7 @@ events:
       - "C:/Program Files/dotnet/"
       - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "D:/Program Files/PuTTY/"
+      - "C:/Program Files/Git/cmd/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Microsoft VS Code/bin/"
@@ -493,6 +514,9 @@ events:
     found: "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe"
     search_context:
       ENV{PATH}:
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\debugCommand"
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\copilotCli"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
         - "C:\\Windows\\System32\\HWAudioDriver"
         - "C:\\Windows\\system32"
@@ -502,9 +526,8 @@ events:
         - "C:\\Windows\\System32\\OpenSSH\\"
         - "C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Program Files\\CMake\\bin"
-        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files\\Microsoft SQL Server\\150\\Tools\\Binn\\"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath"
         - "D:\\Program Files (x86)\\WinSCP\\"
@@ -513,6 +536,7 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "D:\\Program Files\\PuTTY\\"
+        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
@@ -524,7 +548,7 @@ events:
         - "C:\\Program Files\\JetBrains\\CLion 2024.2.0.1\\bin"
         - "C:\\Program Files\\JetBrains\\GoLand 2024.2.1\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\ghcup\\bin"
         - "D:\\msys64\\ucrt64\\bin"
@@ -536,7 +560,7 @@ events:
     backtrace:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     mode: "program"
     variable: "CMAKE_MT"
     description: "Path to a program."
@@ -552,6 +576,9 @@ events:
       - "mt"
     candidate_directories:
       - "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/"
       - "C:/Windows/System32/HWAudioDriver/"
       - "C:/Windows/System32/"
@@ -561,9 +588,7 @@ events:
       - "C:/Windows/System32/OpenSSH/"
       - "C:/Users/Administrator/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Program Files/CMake/bin/"
-      - "C:/Program Files/Git/cmd/"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/"
-      - "C:/Program Files/Java/jdk-17/bin/"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/"
       - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath/"
       - "D:/Program Files (x86)/WinSCP/"
@@ -572,6 +597,7 @@ events:
       - "C:/Program Files/dotnet/"
       - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "D:/Program Files/PuTTY/"
+      - "C:/Program Files/Git/cmd/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Microsoft VS Code/bin/"
@@ -591,6 +617,15 @@ events:
       - "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/mt.com"
       - "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/mt.exe"
       - "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/mt"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/mt.com"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/mt.exe"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/mt"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/mt.com"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/mt.exe"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/mt"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/mt.com"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/mt.exe"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/mt"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/mt.com"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/mt.exe"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/mt"
@@ -618,15 +653,9 @@ events:
       - "C:/Program Files/CMake/bin/mt.com"
       - "C:/Program Files/CMake/bin/mt.exe"
       - "C:/Program Files/CMake/bin/mt"
-      - "C:/Program Files/Git/cmd/mt.com"
-      - "C:/Program Files/Git/cmd/mt.exe"
-      - "C:/Program Files/Git/cmd/mt"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/mt.com"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/mt.exe"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/mt"
-      - "C:/Program Files/Java/jdk-17/bin/mt.com"
-      - "C:/Program Files/Java/jdk-17/bin/mt.exe"
-      - "C:/Program Files/Java/jdk-17/bin/mt"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/mt.com"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/mt.exe"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/mt"
@@ -651,6 +680,9 @@ events:
       - "D:/Program Files/PuTTY/mt.com"
       - "D:/Program Files/PuTTY/mt.exe"
       - "D:/Program Files/PuTTY/mt"
+      - "C:/Program Files/Git/cmd/mt.com"
+      - "C:/Program Files/Git/cmd/mt.exe"
+      - "C:/Program Files/Git/cmd/mt"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/mt.com"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/mt.exe"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/mt"
@@ -699,6 +731,9 @@ events:
     found: false
     search_context:
       ENV{PATH}:
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\debugCommand"
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\copilotCli"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
         - "C:\\Windows\\System32\\HWAudioDriver"
         - "C:\\Windows\\system32"
@@ -708,9 +743,8 @@ events:
         - "C:\\Windows\\System32\\OpenSSH\\"
         - "C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Program Files\\CMake\\bin"
-        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files\\Microsoft SQL Server\\150\\Tools\\Binn\\"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath"
         - "D:\\Program Files (x86)\\WinSCP\\"
@@ -719,6 +753,7 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "D:\\Program Files\\PuTTY\\"
+        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
@@ -730,7 +765,7 @@ events:
         - "C:\\Program Files\\JetBrains\\CLion 2024.2.0.1\\bin"
         - "C:\\Program Files\\JetBrains\\GoLand 2024.2.1\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\ghcup\\bin"
         - "D:\\msys64\\ucrt64\\bin"
@@ -742,7 +777,7 @@ events:
     backtrace:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeFindBinUtils.cmake:238 (find_program)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     mode: "program"
     variable: "CMAKE_AR"
     description: "Path to a program."
@@ -758,6 +793,9 @@ events:
       - "lib"
     candidate_directories:
       - "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/"
       - "C:/Windows/System32/HWAudioDriver/"
       - "C:/Windows/System32/"
@@ -767,9 +805,7 @@ events:
       - "C:/Windows/System32/OpenSSH/"
       - "C:/Users/Administrator/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Program Files/CMake/bin/"
-      - "C:/Program Files/Git/cmd/"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/"
-      - "C:/Program Files/Java/jdk-17/bin/"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/"
       - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath/"
       - "D:/Program Files (x86)/WinSCP/"
@@ -778,6 +814,7 @@ events:
       - "C:/Program Files/dotnet/"
       - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "D:/Program Files/PuTTY/"
+      - "C:/Program Files/Git/cmd/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Microsoft VS Code/bin/"
@@ -798,6 +835,9 @@ events:
     found: "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe"
     search_context:
       ENV{PATH}:
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\debugCommand"
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\copilotCli"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
         - "C:\\Windows\\System32\\HWAudioDriver"
         - "C:\\Windows\\system32"
@@ -807,9 +847,8 @@ events:
         - "C:\\Windows\\System32\\OpenSSH\\"
         - "C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Program Files\\CMake\\bin"
-        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files\\Microsoft SQL Server\\150\\Tools\\Binn\\"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath"
         - "D:\\Program Files (x86)\\WinSCP\\"
@@ -818,6 +857,7 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "D:\\Program Files\\PuTTY\\"
+        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
@@ -829,7 +869,7 @@ events:
         - "C:\\Program Files\\JetBrains\\CLion 2024.2.0.1\\bin"
         - "C:\\Program Files\\JetBrains\\GoLand 2024.2.1\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\ghcup\\bin"
         - "D:\\msys64\\ucrt64\\bin"
@@ -844,7 +884,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     mode: "file"
     variable: "src_in"
     description: "Path to a file."
@@ -863,6 +903,9 @@ events:
     found: "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeCXXCompilerId.cpp.in"
     search_context:
       ENV{PATH}:
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\debugCommand"
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\copilotCli"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
         - "C:\\Windows\\System32\\HWAudioDriver"
         - "C:\\Windows\\system32"
@@ -872,9 +915,8 @@ events:
         - "C:\\Windows\\System32\\OpenSSH\\"
         - "C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Program Files\\CMake\\bin"
-        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files\\Microsoft SQL Server\\150\\Tools\\Binn\\"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath"
         - "D:\\Program Files (x86)\\WinSCP\\"
@@ -883,6 +925,7 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "D:\\Program Files\\PuTTY\\"
+        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
@@ -894,7 +937,7 @@ events:
         - "C:\\Program Files\\JetBrains\\CLion 2024.2.0.1\\bin"
         - "C:\\Program Files\\JetBrains\\GoLand 2024.2.1\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\ghcup\\bin"
         - "D:\\msys64\\ucrt64\\bin"
@@ -907,7 +950,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     message: |
       Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
       Compiler:  
@@ -917,9 +960,9 @@ events:
       The output was:
       0
       ╨Т╨╡╤А╤Б╨╕╤П MSBuild 17.14.23+b0019275e ╨┤╨╗╤П .NET Framework
-      ╨б╨▒╨╛╤А╨║╨░ ╨╜╨░╤З╨░╤В╨░ 30.10.2025 2:38:46.
+      ╨б╨▒╨╛╤А╨║╨░ ╨╜╨░╤З╨░╤В╨░ 17.12.2025 11:49:31.
       
-      ╨Я╤А╨╛╨╡╨║╤В "D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\4.1.0-rc1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
+      ╨Я╤А╨╛╨╡╨║╤В "C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\4.1.0-rc1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
       PrepareForBuild:
         ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "Debug\\".
         ╨б╤В╤А╤Г╨║╤В╤Г╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╤Л╨╣ ╨▓╤Л╨▓╨╛╨┤ ╨▓╨║╨╗╤О╤З╨╡╨╜. ╨д╨╛╤А╨╝╨░╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┤╨╕╨░╨│╨╜╨╛╤Б╤В╨╕╨║╨╕ ╨║╨╛╨╝╨┐╨╕╨╗╤П╤В╨╛╤А╨░ ╨▒╤Г╨┤╨╡╤В ╨╛╤В╤А╨░╨╢╨░╤В╤М ╨╕╨╡╤А╨░╤А╤Е╨╕╤О ╨╛╤И╨╕╨▒╨╛╨║. ╨Я╨╛╨┤╤А╨╛╨▒╨╜╨╡╨╡ ╤Б╨╝. https://aka.ms/cpp/structured-output.
@@ -932,7 +975,7 @@ events:
         CMakeCXXCompilerId.cpp
       Link:
         D:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdCXX.lib" /MACHINE:X64 Debug\\CMakeCXXCompilerId.obj
-        CompilerIdCXX.vcxproj -> D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\4.1.0-rc1\\CompilerIdCXX\\CompilerIdCXX.exe
+        CompilerIdCXX.vcxproj -> C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\4.1.0-rc1\\CompilerIdCXX\\CompilerIdCXX.exe
       PostBuildEvent:
         for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
         :VCEnd
@@ -940,13 +983,13 @@ events:
       FinalizeBuildStatus:
         ╨д╨░╨╣╨╗ "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild" ╤Г╨┤╨░╨╗╤П╨╡╤В╤Б╤П.
         ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.lastbuildstate".
-      ╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\4.1.0-rc1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
+      ╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\4.1.0-rc1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
       
       ╨б╨▒╨╛╤А╨║╨░ ╤Г╤Б╨┐╨╡╤И╨╜╨╛ ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░.
           ╨Я╤А╨╡╨┤╤Г╨┐╤А╨╡╨╢╨┤╨╡╨╜╨╕╨╣: 0
           ╨Ю╤И╨╕╨▒╨╛╨║: 0
       
-      ╨Я╤А╨╛╤И╨╗╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╕ 00:00:01.71
+      ╨Я╤А╨╛╤И╨╗╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╕ 00:00:01.52
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -954,7 +997,7 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
       
       The CXX compiler identification is MSVC, found in:
-        D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/4.1.0-rc1/CompilerIdCXX/CompilerIdCXX.exe
+        C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/4.1.0-rc1/CompilerIdCXX/CompilerIdCXX.exe
       
   -
     kind: "find-v1"
@@ -964,7 +1007,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/Platform/Windows-MSVC.cmake:546 (__windows_compiler_msvc_enable_rc)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/Platform/Windows-MSVC-C.cmake:5 (__windows_compiler_msvc)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeCInformation.cmake:48 (include)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     mode: "program"
     variable: "CMAKE_RC_COMPILER"
     description: "RC compiler"
@@ -979,6 +1022,9 @@ events:
     names:
       - "rc"
     candidate_directories:
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/"
       - "C:/Windows/System32/HWAudioDriver/"
       - "C:/Windows/System32/"
@@ -988,9 +1034,7 @@ events:
       - "C:/Windows/System32/OpenSSH/"
       - "C:/Users/Administrator/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Program Files/CMake/bin/"
-      - "C:/Program Files/Git/cmd/"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/"
-      - "C:/Program Files/Java/jdk-17/bin/"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/"
       - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath/"
       - "D:/Program Files (x86)/WinSCP/"
@@ -999,6 +1043,7 @@ events:
       - "C:/Program Files/dotnet/"
       - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "D:/Program Files/PuTTY/"
+      - "C:/Program Files/Git/cmd/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Microsoft VS Code/bin/"
@@ -1023,10 +1068,19 @@ events:
       - "C:/Program Files/CMake/bin/"
       - "C:/Program Files/CMake/sbin/"
       - "C:/Program Files/CMake/"
-      - "C:/Program Files (x86)/NamedPipeDemo/bin/"
-      - "C:/Program Files (x86)/NamedPipeDemo/sbin/"
-      - "C:/Program Files (x86)/NamedPipeDemo/"
+      - "C:/Program Files (x86)/CrossPlatformIPC/bin/"
+      - "C:/Program Files (x86)/CrossPlatformIPC/sbin/"
+      - "C:/Program Files (x86)/CrossPlatformIPC/"
     searched_directories:
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/rc.com"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/rc.exe"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand/rc"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/rc.com"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/rc.exe"
+      - "C:/Users/Andrey Pevkin/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli/rc"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/rc.com"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/rc.exe"
+      - "C:/Program Files/Java/jdk1.8.0_271/bin/rc"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/rc.com"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/rc.exe"
       - "C:/Program Files/Common Files/Oracle/Java/javapath/rc"
@@ -1054,15 +1108,9 @@ events:
       - "C:/Program Files/CMake/bin/rc.com"
       - "C:/Program Files/CMake/bin/rc.exe"
       - "C:/Program Files/CMake/bin/rc"
-      - "C:/Program Files/Git/cmd/rc.com"
-      - "C:/Program Files/Git/cmd/rc.exe"
-      - "C:/Program Files/Git/cmd/rc"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/rc.com"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/rc.exe"
       - "C:/Program Files/Microsoft SQL Server/150/Tools/Binn/rc"
-      - "C:/Program Files/Java/jdk-17/bin/rc.com"
-      - "C:/Program Files/Java/jdk-17/bin/rc.exe"
-      - "C:/Program Files/Java/jdk-17/bin/rc"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/rc.com"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/rc.exe"
       - "D:/Program Files/Apache/Maven/apache-maven-3.8.9/bin/rc"
@@ -1087,6 +1135,9 @@ events:
       - "D:/Program Files/PuTTY/rc.com"
       - "D:/Program Files/PuTTY/rc.exe"
       - "D:/Program Files/PuTTY/rc"
+      - "C:/Program Files/Git/cmd/rc.com"
+      - "C:/Program Files/Git/cmd/rc.exe"
+      - "C:/Program Files/Git/cmd/rc"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/rc.com"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/rc.exe"
       - "C:/Users/Andrey Pevkin/AppData/Local/Programs/Python/Launcher/rc"
@@ -1159,18 +1210,21 @@ events:
       - "C:/Program Files/CMake/rc.com"
       - "C:/Program Files/CMake/rc.exe"
       - "C:/Program Files/CMake/rc"
-      - "C:/Program Files (x86)/NamedPipeDemo/bin/rc.com"
-      - "C:/Program Files (x86)/NamedPipeDemo/bin/rc.exe"
-      - "C:/Program Files (x86)/NamedPipeDemo/bin/rc"
-      - "C:/Program Files (x86)/NamedPipeDemo/sbin/rc.com"
-      - "C:/Program Files (x86)/NamedPipeDemo/sbin/rc.exe"
-      - "C:/Program Files (x86)/NamedPipeDemo/sbin/rc"
-      - "C:/Program Files (x86)/NamedPipeDemo/rc.com"
-      - "C:/Program Files (x86)/NamedPipeDemo/rc.exe"
-      - "C:/Program Files (x86)/NamedPipeDemo/rc"
+      - "C:/Program Files (x86)/CrossPlatformIPC/bin/rc.com"
+      - "C:/Program Files (x86)/CrossPlatformIPC/bin/rc.exe"
+      - "C:/Program Files (x86)/CrossPlatformIPC/bin/rc"
+      - "C:/Program Files (x86)/CrossPlatformIPC/sbin/rc.com"
+      - "C:/Program Files (x86)/CrossPlatformIPC/sbin/rc.exe"
+      - "C:/Program Files (x86)/CrossPlatformIPC/sbin/rc"
+      - "C:/Program Files (x86)/CrossPlatformIPC/rc.com"
+      - "C:/Program Files (x86)/CrossPlatformIPC/rc.exe"
+      - "C:/Program Files (x86)/CrossPlatformIPC/rc"
     found: false
     search_context:
       ENV{PATH}:
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\debugCommand"
+        - "c:\\Users\\Andrey Pevkin\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\copilotCli"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
         - "C:\\Windows\\System32\\HWAudioDriver"
         - "C:\\Windows\\system32"
@@ -1180,9 +1234,8 @@ events:
         - "C:\\Windows\\System32\\OpenSSH\\"
         - "C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Program Files\\CMake\\bin"
-        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files\\Microsoft SQL Server\\150\\Tools\\Binn\\"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath"
         - "D:\\Program Files (x86)\\WinSCP\\"
@@ -1191,6 +1244,7 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "D:\\Program Files\\PuTTY\\"
+        - "C:\\Program Files\\Git\\cmd"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
@@ -1202,30 +1256,30 @@ events:
         - "C:\\Program Files\\JetBrains\\CLion 2024.2.0.1\\bin"
         - "C:\\Program Files\\JetBrains\\GoLand 2024.2.1\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
-        - "C:\\Program Files\\Java\\jdk-17\\bin"
+        - "C:\\Program Files\\Java\\jdk1.8.0_271\\bin"
         - "D:\\Program Files\\Apache\\Maven\\apache-maven-3.8.9\\bin"
         - "C:\\ghcup\\bin"
         - "D:\\msys64\\ucrt64\\bin"
         - "C:\\Users\\Andrey Pevkin\\.dotnet\\tools"
         - "D:\\Program Files\\LLVM\\bin"
         - "C:\\Users\\Andrey Pevkin\\AppData\\Local\\Microsoft\\WinGet\\Links"
-      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/NamedPipeDemo"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/CrossPlatformIPC"
       CMAKE_SYSTEM_PREFIX_PATH:
         - "C:/Program Files"
         - "C:/Program Files (x86)"
         - "C:/Program Files/CMake"
-        - "C:/Program Files (x86)/NamedPipeDemo"
+        - "C:/Program Files (x86)/CrossPlatformIPC"
   -
     kind: "try_compile-v1"
     backtrace:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-s1kfbk"
-      binary: "D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-s1kfbk"
+      source: "C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-uq33ky"
+      binary: "C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-uq33ky"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_C_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -1234,40 +1288,40 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-s1kfbk'
+        Change Dir: 'C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-uq33ky'
         
-        Run Build Command(s): "D:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_ff168.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "D:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_7528f.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         ╨Т╨╡╤А╤Б╨╕╤П MSBuild 17.14.23+b0019275e ╨┤╨╗╤П .NET Framework
-        ╨б╨▒╨╛╤А╨║╨░ ╨╜╨░╤З╨░╤В╨░ 30.10.2025 2:38:49.
+        ╨б╨▒╨╛╤А╨║╨░ ╨╜╨░╤З╨░╤В╨░ 17.12.2025 11:49:33.
         
-        ╨Я╤А╨╛╨╡╨║╤В "D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-s1kfbk\\cmTC_ff168.vcxproj" ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
+        ╨Я╤А╨╛╨╡╨║╤В "C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-uq33ky\\cmTC_7528f.vcxproj" ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
         PrepareForBuild:
-          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "cmTC_ff168.dir\\Debug\\".
+          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "cmTC_7528f.dir\\Debug\\".
           ╨б╤В╤А╤Г╨║╤В╤Г╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╤Л╨╣ ╨▓╤Л╨▓╨╛╨┤ ╨▓╨║╨╗╤О╤З╨╡╨╜. ╨д╨╛╤А╨╝╨░╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┤╨╕╨░╨│╨╜╨╛╤Б╤В╨╕╨║╨╕ ╨║╨╛╨╝╨┐╨╕╨╗╤П╤В╨╛╤А╨░ ╨▒╤Г╨┤╨╡╤В ╨╛╤В╤А╨░╨╢╨░╤В╤М ╨╕╨╡╤А╨░╤А╤Е╨╕╤О ╨╛╤И╨╕╨▒╨╛╨║. ╨Я╨╛╨┤╤А╨╛╨▒╨╜╨╡╨╡ ╤Б╨╝. https://aka.ms/cpp/structured-output.
-          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-s1kfbk\\Debug\\".
-          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "cmTC_ff168.dir\\Debug\\cmTC_ff168.tlog\\".
+          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-uq33ky\\Debug\\".
+          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "cmTC_7528f.dir\\Debug\\cmTC_7528f.tlog\\".
         InitializeBuildStatus:
-          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ "cmTC_ff168.dir\\Debug\\cmTC_ff168.tlog\\unsuccessfulbuild", ╤В╨░╨║ ╨║╨░╨║ ╨▒╤Л╨╗╨╛ ╨╖╨░╨┤╨░╨╜╨╛ "AlwaysCreate".
-          ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "cmTC_ff168.dir\\Debug\\cmTC_ff168.tlog\\unsuccessfulbuild".
+          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ "cmTC_7528f.dir\\Debug\\cmTC_7528f.tlog\\unsuccessfulbuild", ╤В╨░╨║ ╨║╨░╨║ ╨▒╤Л╨╗╨╛ ╨╖╨░╨┤╨░╨╜╨╛ "AlwaysCreate".
+          ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "cmTC_7528f.dir\\Debug\\cmTC_7528f.tlog\\unsuccessfulbuild".
         ClCompile:
-          D:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Fo"cmTC_ff168.dir\\Debug\\\\" /Fd"cmTC_ff168.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCCompilerABI.c"
+          D:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Fo"cmTC_7528f.dir\\Debug\\\\" /Fd"cmTC_7528f.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCCompilerABI.c"
           ╨Ю╨┐╤В╨╕╨╝╨╕╨╖╨╕╤А╤Г╤О╤Й╨╕╨╣ ╨║╨╛╨╝╨┐╨╕╨╗╤П╤В╨╛╤А Microsoft (R) C/C++ ╨▓╨╡╤А╤Б╨╕╨╕ 19.44.35217 ╨┤╨╗╤П x64
           (C) ╨Ъ╨╛╤А╨┐╨╛╤А╨░╤Ж╨╕╤П ╨Ь╨░╨╣╨║╤А╨╛╤Б╨╛╤Д╤В (Microsoft Corporation).  ╨Т╤Б╨╡ ╨┐╤А╨░╨▓╨░ ╨╖╨░╤Й╨╕╤Й╨╡╨╜╤Л.
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Fo"cmTC_ff168.dir\\Debug\\\\" /Fd"cmTC_ff168.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCCompilerABI.c"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Fo"cmTC_7528f.dir\\Debug\\\\" /Fd"cmTC_7528f.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCCompilerABI.c"
           CMakeCCompilerABI.c
         Link:
-          D:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-s1kfbk\\Debug\\cmTC_ff168.exe" /INCREMENTAL /ILK:"cmTC_ff168.dir\\Debug\\cmTC_ff168.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-s1kfbk/Debug/cmTC_ff168.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-s1kfbk/Debug/cmTC_ff168.lib" /MACHINE:X64  /machine:x64 cmTC_ff168.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_ff168.vcxproj -> D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-s1kfbk\\Debug\\cmTC_ff168.exe
+          D:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-uq33ky\\Debug\\cmTC_7528f.exe" /INCREMENTAL /ILK:"cmTC_7528f.dir\\Debug\\cmTC_7528f.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-uq33ky/Debug/cmTC_7528f.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-uq33ky/Debug/cmTC_7528f.lib" /MACHINE:X64  /machine:x64 cmTC_7528f.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_7528f.vcxproj -> C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-uq33ky\\Debug\\cmTC_7528f.exe
         FinalizeBuildStatus:
-          ╨д╨░╨╣╨╗ "cmTC_ff168.dir\\Debug\\cmTC_ff168.tlog\\unsuccessfulbuild" ╤Г╨┤╨░╨╗╤П╨╡╤В╤Б╤П.
-          ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "cmTC_ff168.dir\\Debug\\cmTC_ff168.tlog\\cmTC_ff168.lastbuildstate".
-        ╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-s1kfbk\\cmTC_ff168.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
+          ╨д╨░╨╣╨╗ "cmTC_7528f.dir\\Debug\\cmTC_7528f.tlog\\unsuccessfulbuild" ╤Г╨┤╨░╨╗╤П╨╡╤В╤Б╤П.
+          ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "cmTC_7528f.dir\\Debug\\cmTC_7528f.tlog\\cmTC_7528f.lastbuildstate".
+        ╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-uq33ky\\cmTC_7528f.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
         
         ╨б╨▒╨╛╤А╨║╨░ ╤Г╤Б╨┐╨╡╤И╨╜╨╛ ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░.
             ╨Я╤А╨╡╨┤╤Г╨┐╤А╨╡╨╢╨┤╨╡╨╜╨╕╨╣: 0
             ╨Ю╤И╨╕╨▒╨╛╨║: 0
         
-        ╨Я╤А╨╛╤И╨╗╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╕ 00:00:01.65
+        ╨Я╤А╨╛╤И╨╗╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╕ 00:00:01.69
         
       exitCode: 0
   -
@@ -1275,7 +1329,7 @@ events:
     backtrace:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     message: |
       Parsed C implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
@@ -1293,7 +1347,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/Internal/CMakeDetermineLinkerId.cmake:36 (message)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     message: |
       Running the C compiler's linker: "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/link.exe" "-v"
       Microsoft (R) Incremental Linker Version 14.44.35217.0
@@ -1303,12 +1357,12 @@ events:
     backtrace:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-cnf4hw"
-      binary: "D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-cnf4hw"
+      source: "C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-3heff7"
+      binary: "C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-3heff7"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -1318,40 +1372,40 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-cnf4hw'
+        Change Dir: 'C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-3heff7'
         
-        Run Build Command(s): "D:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_b6a76.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "D:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_d3239.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         ╨Т╨╡╤А╤Б╨╕╤П MSBuild 17.14.23+b0019275e ╨┤╨╗╤П .NET Framework
-        ╨б╨▒╨╛╤А╨║╨░ ╨╜╨░╤З╨░╤В╨░ 30.10.2025 2:38:52.
+        ╨б╨▒╨╛╤А╨║╨░ ╨╜╨░╤З╨░╤В╨░ 17.12.2025 11:49:35.
         
-        ╨Я╤А╨╛╨╡╨║╤В "D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cnf4hw\\cmTC_b6a76.vcxproj" ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
+        ╨Я╤А╨╛╨╡╨║╤В "C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-3heff7\\cmTC_d3239.vcxproj" ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
         PrepareForBuild:
-          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "cmTC_b6a76.dir\\Debug\\".
+          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "cmTC_d3239.dir\\Debug\\".
           ╨б╤В╤А╤Г╨║╤В╤Г╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╤Л╨╣ ╨▓╤Л╨▓╨╛╨┤ ╨▓╨║╨╗╤О╤З╨╡╨╜. ╨д╨╛╤А╨╝╨░╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┤╨╕╨░╨│╨╜╨╛╤Б╤В╨╕╨║╨╕ ╨║╨╛╨╝╨┐╨╕╨╗╤П╤В╨╛╤А╨░ ╨▒╤Г╨┤╨╡╤В ╨╛╤В╤А╨░╨╢╨░╤В╤М ╨╕╨╡╤А╨░╤А╤Е╨╕╤О ╨╛╤И╨╕╨▒╨╛╨║. ╨Я╨╛╨┤╤А╨╛╨▒╨╜╨╡╨╡ ╤Б╨╝. https://aka.ms/cpp/structured-output.
-          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cnf4hw\\Debug\\".
-          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "cmTC_b6a76.dir\\Debug\\cmTC_b6a76.tlog\\".
+          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-3heff7\\Debug\\".
+          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨░╤В╨░╨╗╨╛╨│╨░ "cmTC_d3239.dir\\Debug\\cmTC_d3239.tlog\\".
         InitializeBuildStatus:
-          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ "cmTC_b6a76.dir\\Debug\\cmTC_b6a76.tlog\\unsuccessfulbuild", ╤В╨░╨║ ╨║╨░╨║ ╨▒╤Л╨╗╨╛ ╨╖╨░╨┤╨░╨╜╨╛ "AlwaysCreate".
-          ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "cmTC_b6a76.dir\\Debug\\cmTC_b6a76.tlog\\unsuccessfulbuild".
+          ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ "cmTC_d3239.dir\\Debug\\cmTC_d3239.tlog\\unsuccessfulbuild", ╤В╨░╨║ ╨║╨░╨║ ╨▒╤Л╨╗╨╛ ╨╖╨░╨┤╨░╨╜╨╛ "AlwaysCreate".
+          ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "cmTC_d3239.dir\\Debug\\cmTC_d3239.tlog\\unsuccessfulbuild".
         ClCompile:
-          D:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /GR /Fo"cmTC_b6a76.dir\\Debug\\\\" /Fd"cmTC_b6a76.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCXXCompilerABI.cpp"
+          D:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /GR /Fo"cmTC_d3239.dir\\Debug\\\\" /Fd"cmTC_d3239.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCXXCompilerABI.cpp"
           ╨Ю╨┐╤В╨╕╨╝╨╕╨╖╨╕╤А╤Г╤О╤Й╨╕╨╣ ╨║╨╛╨╝╨┐╨╕╨╗╤П╤В╨╛╤А Microsoft (R) C/C++ ╨▓╨╡╤А╤Б╨╕╨╕ 19.44.35217 ╨┤╨╗╤П x64
           (C) ╨Ъ╨╛╤А╨┐╨╛╤А╨░╤Ж╨╕╤П ╨Ь╨░╨╣╨║╤А╨╛╤Б╨╛╤Д╤В (Microsoft Corporation).  ╨Т╤Б╨╡ ╨┐╤А╨░╨▓╨░ ╨╖╨░╤Й╨╕╤Й╨╡╨╜╤Л.
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /GR /Fo"cmTC_b6a76.dir\\Debug\\\\" /Fd"cmTC_b6a76.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /GR /Fo"cmTC_d3239.dir\\Debug\\\\" /Fd"cmTC_d3239.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.1\\Modules\\CMakeCXXCompilerABI.cpp"
           CMakeCXXCompilerABI.cpp
         Link:
-          D:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cnf4hw\\Debug\\cmTC_b6a76.exe" /INCREMENTAL /ILK:"cmTC_b6a76.dir\\Debug\\cmTC_b6a76.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-cnf4hw/Debug/cmTC_b6a76.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-cnf4hw/Debug/cmTC_b6a76.lib" /MACHINE:X64  /machine:x64 cmTC_b6a76.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_b6a76.vcxproj -> D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cnf4hw\\Debug\\cmTC_b6a76.exe
+          D:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-3heff7\\Debug\\cmTC_d3239.exe" /INCREMENTAL /ILK:"cmTC_d3239.dir\\Debug\\cmTC_d3239.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-3heff7/Debug/cmTC_d3239.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/CMakeScratch/TryCompile-3heff7/Debug/cmTC_d3239.lib" /MACHINE:X64  /machine:x64 cmTC_d3239.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_d3239.vcxproj -> C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-3heff7\\Debug\\cmTC_d3239.exe
         FinalizeBuildStatus:
-          ╨д╨░╨╣╨╗ "cmTC_b6a76.dir\\Debug\\cmTC_b6a76.tlog\\unsuccessfulbuild" ╤Г╨┤╨░╨╗╤П╨╡╤В╤Б╤П.
-          ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "cmTC_b6a76.dir\\Debug\\cmTC_b6a76.tlog\\cmTC_b6a76.lastbuildstate".
-        ╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\\Programming\\IdeaProjects\\space\\space-launcher\\tests\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cnf4hw\\cmTC_b6a76.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
+          ╨д╨░╨╣╨╗ "cmTC_d3239.dir\\Debug\\cmTC_d3239.tlog\\unsuccessfulbuild" ╤Г╨┤╨░╨╗╤П╨╡╤В╤Б╤П.
+          ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "cmTC_d3239.dir\\Debug\\cmTC_d3239.tlog\\cmTC_d3239.lastbuildstate".
+        ╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "C:\\Users\\Andrey Pevkin\\Desktop\\Scripts\\app_sender_receiver_test\\build\\CMakeFiles\\CMakeScratch\\TryCompile-3heff7\\cmTC_d3239.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
         
         ╨б╨▒╨╛╤А╨║╨░ ╤Г╤Б╨┐╨╡╤И╨╜╨╛ ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░.
             ╨Я╤А╨╡╨┤╤Г╨┐╤А╨╡╨╢╨┤╨╡╨╜╨╕╨╣: 0
             ╨Ю╤И╨╕╨▒╨╛╨║: 0
         
-        ╨Я╤А╨╛╤И╨╗╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╕ 00:00:01.61
+        ╨Я╤А╨╛╤И╨╗╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╕ 00:00:01.69
         
       exitCode: 0
   -
@@ -1359,7 +1413,7 @@ events:
     backtrace:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     message: |
       Parsed CXX implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
@@ -1377,7 +1431,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/Internal/CMakeDetermineLinkerId.cmake:36 (message)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
       - "C:/Program Files/CMake/share/cmake-4.1/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:3 (project)"
+      - "CMakeLists.txt:2 (project)"
     message: |
       Running the CXX compiler's linker: "D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/link.exe" "-v"
       Microsoft (R) Incremental Linker Version 14.44.35217.0

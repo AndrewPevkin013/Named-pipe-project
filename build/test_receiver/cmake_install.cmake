@@ -1,8 +1,8 @@
-# Install script for directory: D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/test_receiver
+# Install script for directory: C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/test_receiver
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/NamedPipeDemo")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/CrossPlatformIPC")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -35,6 +35,6 @@ endif()
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/test_receiver/install_local_manifest.txt"
+  file(WRITE "C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/test_receiver/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

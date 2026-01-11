@@ -1,4 +1,6 @@
-D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/ALL_BUILD.dir
-D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/CMakeFiles/ZERO_CHECK.dir
-D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/test_sender/CMakeFiles/test_sender.dir
-D:/Programming/IdeaProjects/space/space-launcher/tests/app_sender_receiver_test/build/test_receiver/CMakeFiles/test_receiver.dir
+C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/ipc_protocol.dir
+C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/functional_tests.dir
+C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/test_sender/CMakeFiles/test_sender.dir
+C:/Users/Andrey Pevkin/Desktop/Scripts/app_sender_receiver_test/build/test_receiver/CMakeFiles/test_receiver.dir

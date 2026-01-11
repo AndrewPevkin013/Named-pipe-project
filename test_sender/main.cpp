@@ -20,14 +20,14 @@
 
 class IPCSender {
 public:
-    enum class SendStatus {
+enum class SendStatus {
         SUCCESS,
         NO_RECEIVER,
         BUFFER_FULL,
         PIPE_ERROR,
         TIMEOUT
     };
-
+    
     IPCSender() {
         #ifdef _WIN32
             pipe_ = CreateFile(

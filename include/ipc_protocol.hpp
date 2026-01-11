@@ -45,13 +45,6 @@ namespace IPC {
 
     #pragma pack(pop)
 
-    enum class SendStatus {
-        SUCCESS,
-        NO_RECEIVER,
-        BUFFER_FULL,
-        PIPE_ERROR,
-        TIMEOUT
-    };
 
     struct AckPacket {
         uint64_t message_id;
