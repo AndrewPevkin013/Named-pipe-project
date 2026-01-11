@@ -29,7 +29,7 @@ namespace IPC {
         }
     };
     
-    static_assert(sizeof(FragmentHeader) == 32, "FragmentHeader size mismatch");
+    static_assert(sizeof(FragmentHeader) == 40, "FragmentHeader size mismatch");
     constexpr size_t MIN_FRAGMENT_SIZE = 1024;
     constexpr size_t MAX_FRAGMENT_SIZE = 65536;
     constexpr size_t HEADER_SIZE = sizeof(FragmentHeader);
@@ -44,6 +44,21 @@ namespace IPC {
     };
 
     #pragma pack(pop)
+
+    enum class SendStatus {
+        SUCCESS,
+        NO_RECEIVER,
+        BUFFER_FULL,
+        PIPE_ERROR,
+        TIMEOUT
+    };
+
+    struct AckPacket {
+        uint64_t message_id;
+        uint32_t received_fragments;
+        uint32_t total_fragments;
+        bool complete;
+    };
 
     class MessageFragmenter {
     public:
@@ -86,6 +101,4 @@ namespace IPC {
         std::map<uint64_t, AssemblyState> assembly_map_;
         mutable std::mutex mutex_;
     };
-    
-
 }
