@@ -5,7 +5,7 @@
 
 namespace IPC {
 
-size_t MessageFragmenter::calculate_optimal_fragment_size(size_t total_message_size) const {
+size_t MessageFragmenter::calculate_fragment_size(size_t total_message_size) const {
     
     if (total_message_size <= 1024) {
         return total_message_size;
@@ -21,71 +21,44 @@ size_t MessageFragmenter::calculate_optimal_fragment_size(size_t total_message_s
     }
 }
 
-std::vector<Fragment> MessageFragmenter::fragment_message(
-    const std::vector<char>& message_data) {
-    size_t fragment_size = calculate_optimal_fragment_size(message_data.size());
+std::vector<Fragment> MessageFragmenter::fragment_message(const std::vector<char>& message_data) {
+    size_t fragment_size = calculate_fragment_size(message_data.size());
     
     return fragment_message_with_size(message_data, fragment_size);
 }
 
-std::vector<Fragment> MessageFragmenter::fragment_message_with_size(
-    const std::vector<char>& message_data,
-    size_t fragment_size) {
-    
-    if (fragment_size < MIN_FRAGMENT_SIZE) {
-        fragment_size = MIN_FRAGMENT_SIZE;
-    }
-    if (fragment_size > MAX_FRAGMENT_SIZE) {
-        fragment_size = MAX_FRAGMENT_SIZE;
-    }
-    
-    std::vector<Fragment> fragments;
-    
+std::vector<Fragment> MessageFragmenter::fragment_message_with_size(const std::vector<char>& message_data, size_t fragment_size) {
+    fragment_size = std::clamp(fragment_size, MIN_FRAGMENT_SIZE, MAX_FRAGMENT_SIZE);
+
     uint64_t message_id = next_message_id_++;
-    uint32_t total_size = static_cast<uint32_t>(message_data.size());
-    
-    uint32_t total_fragments = static_cast<uint32_t>(
-        (total_size + fragment_size - 1) / fragment_size);
-    
-    size_t offset = 0;
-    
-    for (uint32_t i = 0; i < total_fragments; i++) {
-        Fragment fragment;
-        
-        fragment.header.message_id = message_id;
-        fragment.header.total_size = total_size;
-        fragment.header.fragment_index = i;
-        fragment.header.total_fragments = total_fragments;
-        fragment.header.set_last(i == total_fragments - 1);
-        
-        size_t current_fragment_size = std::min(
-            fragment_size, 
-            message_data.size() - offset);
-        
-        fragment.header.fragment_size = static_cast<uint32_t>(current_fragment_size);
-        
-        fragment.data.resize(current_fragment_size);
-        std::copy_n(
-            message_data.begin() + offset,
-            current_fragment_size,
-            fragment.data.begin()
-        );
-        
-        fragments.push_back(std::move(fragment));
-        offset += current_fragment_size;
+    size_t total_size = message_data.size();
+    size_t total_fragments = (total_size + fragment_size - 1) / fragment_size;
+
+    std::vector<Fragment> fragments;
+    fragments.reserve(total_fragments);
+
+    for (size_t i = 0; i < total_fragments; ++i) {
+        size_t offset = i * fragment_size;
+        size_t size = std::min(fragment_size, total_size - offset);
+
+        Fragment f;
+        f.header.message_id = message_id;
+        f.header.total_size = static_cast<uint32_t>(total_size);
+        f.header.fragment_size = static_cast<uint32_t>(size);
+        f.header.fragment_index = static_cast<uint32_t>(i);
+        f.header.total_fragments = static_cast<uint32_t>(total_fragments);
+        f.header.flags = (i + 1 == total_fragments) ? FLAG_LAST : FLAG_DATA;
+
+        f.data.insert(f.data.end(), message_data.begin() + offset, message_data.begin() + offset + size);
+
+        fragments.push_back(std::move(f));
     }
-    
-    std::cout << "[Fragmenter] Message " << message_id 
-              << " fragmented into " << total_fragments 
-              << " fragments (optimal size: " << fragment_size 
-              << " bytes, total: " << total_size << " bytes)" << std::endl;
-    
+
     return fragments;
 }
 
-Fragment MessageFragmenter::create_control_message(
-    const std::vector<char>& data,
-    uint8_t flags) {
+
+Fragment MessageFragmenter::create_control_message(const std::vector<char>& data, uint8_t flags) {
     
     Fragment fragment;
     fragment.header.message_id = next_message_id_++;

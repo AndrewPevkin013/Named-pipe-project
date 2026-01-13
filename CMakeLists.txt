@@ -8,16 +8,18 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-add_library(ipc_protocol STATIC
+add_library(ipc_core STATIC
     src/fragment_manager.cpp
     src/message_assembler.cpp
+    src/ipc_send_queue.cpp
+    src/ipc_sender.cpp
 )
 
-target_include_directories(ipc_protocol PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(ipc_core PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-add_executable(functional_tests tests/functional_tests.cpp)
-target_link_libraries(functional_tests ipc_protocol)
-set_target_properties(functional_tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/tests)
+if (WIN32)
+    target_link_libraries(ipc_core PUBLIC kernel32)
+endif()
 
 add_subdirectory(test_sender)
 add_subdirectory(test_receiver)

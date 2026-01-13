@@ -24,10 +24,8 @@ bool MessageAssembler::add_fragment(const Fragment& fragment) {
     
     AssemblyState& state = it->second;
     
-    if (fragment.header.total_fragments != state.total_fragments ||
-        fragment.header.total_size != state.total_size) {
-        std::cerr << "[Assembler] Fragment mismatch for message " 
-                  << message_id << std::endl;
+    if (fragment.header.total_fragments != state.total_fragments || fragment.header.total_size != state.total_size) {
+        std::cerr << "[Assembler] Fragment mismatch for message " << message_id << std::endl;
         return false;
     }
     
@@ -41,9 +39,7 @@ bool MessageAssembler::add_fragment(const Fragment& fragment) {
     state.received_count++;
     
     if (state.received_count % 10 == 0 || state.is_complete()) {
-        std::cout << "[Assembler] Message " << message_id 
-                  << ": " << state.received_count << "/" 
-                  << state.total_fragments << " fragments received" << std::endl;
+        std::cout << "[Assembler] Message " << message_id << ": " << state.received_count << "/" << state.total_fragments << " fragments received" << std::endl;
     }
     
     return state.is_complete();
@@ -75,9 +71,7 @@ MessageAssembler::get_assembled_message(uint64_t message_id) {
             );
         }
         
-        std::cout << "[Assembler] Message " << message_id 
-                  << " assembled successfully (" 
-                  << result.data.size() << " bytes)" << std::endl;
+        std::cout << "[Assembler] Message " << message_id << " assembled successfully (" << result.data.size() << " bytes)" << std::endl;
         
         assembly_map_.erase(it);
     }
@@ -96,8 +90,7 @@ void MessageAssembler::cleanup_old_messages(uint64_t max_age_ms) {
             now - it->second.created_at);
         
         if (age.count() > max_age_ms) {
-            std::cout << "[Assembler] Cleaning up old message " 
-                      << it->first << " (" << age.count() << "ms old)" << std::endl;
+            std::cout << "[Assembler] Cleaning up old message " << it->first << " (" << age.count() << "ms old)" << std::endl;
             it = assembly_map_.erase(it);
         } else {
             ++it;

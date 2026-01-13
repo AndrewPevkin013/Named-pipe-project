@@ -18,172 +18,157 @@
 
 class IPCReceiver {
 public:
-    IPCReceiver() : running_(true) {
-        #ifdef _WIN32
-            pipe_ = CreateNamedPipe(
-                PIPE_NAME,
-                PIPE_ACCESS_INBOUND,
-                PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
-                PIPE_UNLIMITED_INSTANCES,
-                4096,
-                4096,
-                0,
-                NULL
-            );
-        #else
-            mkfifo(FIFO_PATH, 0666);
-            pipe_ = open(FIFO_PATH, O_RDONLY);
-        #endif
+    IPCReceiver() : running_(true) {}
+    static std::atomic<uint32_t> next_client_id;
+
+    void run(IPC::MessageAssembler& assembler) {
+    #ifdef _WIN32
+        std::cout << "[Receiver] Waiting for connections..." << std::endl;
+            while (running_) {
+                HANDLE pipe = CreateNamedPipeA(
+                    PIPE_NAME,
+                    PIPE_ACCESS_DUPLEX,
+                    PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
+                    PIPE_UNLIMITED_INSTANCES,
+                    64 * 1024,
+                    64 * 1024,
+                    0,
+                    NULL
+                );
+
+                if (pipe == INVALID_HANDLE_VALUE) {
+                    std::cerr << "CreateNamedPipe failed\n";
+                    continue;
+                }
+
+                BOOL connected = ConnectNamedPipe(pipe, NULL) || GetLastError() == ERROR_PIPE_CONNECTED;
+
+                if (!connected) {
+                    CloseHandle(pipe);
+                    continue;
+                }
+
+                std::thread(&IPCReceiver::client_loop, this, pipe, std::ref(assembler)).detach();
+            }
+    #else
+            // Linux — FIFO НЕ поддерживает multi-client нормально
+            // Тут пока оставлил single-reader модель
+            run_fifo(assembler);
+    #endif
     }
-    
-    ~IPCReceiver() {
+
+    void stop() {
         running_ = false;
-        if (pipe_ != INVALID_HANDLE_VALUE) {
-            #ifdef _WIN32
-                CloseHandle(pipe_);
-            #else
-                close(pipe_);
-                unlink(FIFO_PATH);
-            #endif
-        }
     }
-    
-    bool receive_fragment(IPC::Fragment& fragment) {
-        if (!receive_raw(&fragment.header, IPC::HEADER_SIZE)) {
-            return false;
-        }
-        
-        fragment.data.resize(fragment.header.fragment_size);
-        if (!receive_raw(fragment.data.data(), fragment.data.size())) {
-            return false;
-        }
-        
-        return true;
-    }
-    
-    bool is_valid() const {
-        return pipe_ != INVALID_HANDLE_VALUE;
-    }
-    
+
 private:
-    bool receive_raw(void* buffer, size_t size) {
-        #ifdef _WIN32
-            DWORD bytes_read;
-            if (!ReadFile(pipe_, buffer, static_cast<DWORD>(size), &bytes_read, NULL)) {
+    #ifdef _WIN32
+        void client_loop(HANDLE pipe, IPC::MessageAssembler& assembler) {
+            uint32_t client_id = next_client_id.fetch_add(1);
+            std::cout << "[Receiver] Client connected, assigned id = " << client_id << std::endl;
+              while (running_) {
+                IPC::Fragment fragment;
+                if (!receive_fragment(pipe, fragment)) {
+                    break;
+                }
+
+                if (fragment.header.flags & IPC::FLAG_ACK) {
+                    std::cout << "[ACK] Message delivered: " << fragment.header.message_id << "\n";
+                    continue;
+                }
+                
+                if (assembler.add_fragment(fragment)) {
+                    auto msg = assembler.get_assembled_message(fragment.header.message_id);
+                    if (msg.complete) {
+                        std::string text(msg.data.begin(), msg.data.end());
+                        std::cout << "\n[Receiver] Message from client " << client_id  << ":\n" << text << "\n";
+
+                        IPC::Fragment ack;
+                        ack.header.sender_id = client_id;
+                        ack.header.message_id = fragment.header.message_id;
+                        ack.header.total_fragments = 1;
+                        ack.header.fragment_index = 0;
+                        ack.header.fragment_size = sizeof(IPC::AckPayload);
+                        ack.header.flags = IPC::FLAG_ACK | IPC::FLAG_LAST;
+
+                        IPC::AckPayload payload{ fragment.header.message_id };
+                        ack.data.resize(sizeof(payload));
+                        std::memcpy(ack.data.data(), &payload, sizeof(payload));
+
+                        if (!send_fragment(pipe, ack)) {
+                            std::cerr << "[Receiver] Failed to send ACK\n";
+                        }
+                    }
+                }
+
+            }
+            CloseHandle(pipe);
+        }
+
+        bool receive_fragment(HANDLE pipe, IPC::Fragment& fragment) {
+            DWORD read = 0;
+            uint32_t packet_size = 0;
+
+            if (!ReadFile(pipe, &packet_size, sizeof(packet_size), &read, nullptr) || read != sizeof(packet_size)) {
                 return false;
             }
-            return bytes_read == size;
-        #else
-            ssize_t bytes_read = read(pipe_, buffer, size);
-            return bytes_read == static_cast<ssize_t>(size);
-        #endif
-    }
-    
-#ifdef _WIN32
-    HANDLE pipe_ = INVALID_HANDLE_VALUE;
-#else
-    int pipe_ = -1;
-#endif
+
+            if (!ReadFile(pipe, &fragment.header, sizeof(IPC::FragmentHeader), &read, nullptr) || read != sizeof(IPC::FragmentHeader)) {
+                return false;
+            }
+
+            fragment.data.resize(fragment.header.fragment_size);
+            if (!fragment.data.empty()) {
+                if (!ReadFile(pipe, fragment.data.data(), fragment.header.fragment_size, &read, nullptr) || read != fragment.header.fragment_size) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        bool send_fragment(HANDLE pipe, const IPC::Fragment& fragment) {
+            DWORD written = 0;
+
+            uint32_t packet_size = sizeof(IPC::FragmentHeader) + static_cast<uint32_t>(fragment.data.size());
+
+            if (!WriteFile(pipe, &packet_size, sizeof(packet_size), &written, nullptr))
+                return false;
+
+            if (!WriteFile(pipe, &fragment.header, sizeof(fragment.header), &written, nullptr))
+                return false;
+
+            if (!fragment.data.empty()) {
+                if (!WriteFile(pipe, fragment.data.data(), static_cast<DWORD>(fragment.data.size()), &written, nullptr))
+                    return false;
+            }
+
+            return true;
+        }
+
+
+    #endif
+
     std::atomic<bool> running_;
 };
 
-void message_callback(const IPC::MessageAssembler::AssembledMessage& message) {
-    if (!message.complete || message.data.empty()) {
-        return;
-    }
-    
-    std::string data_str(message.data.begin(), message.data.end());
-    
-    size_t metadata_end = data_str.find("\n\n");
-    if (metadata_end != std::string::npos) {
-        std::string metadata = data_str.substr(0, metadata_end);
-        std::cout << "\n[Callback] Received message ID: " << message.message_id << std::endl;
-        std::cout << "Metadata:\n" << metadata << std::endl;
-        
-        std::istringstream stream(metadata);
-        std::string line;
-        while (std::getline(stream, line)) {
-            size_t colon_pos = line.find(':');
-            if (colon_pos != std::string::npos) {
-                std::string key = line.substr(0, colon_pos);
-                std::string value = line.substr(colon_pos + 1);
-                std::cout << "  " << key << " = " << value << std::endl;
-            }
-        }
-        
-        size_t body_size = message.data.size() - metadata_end - 2;
-        std::cout << "Body size: " << body_size << " bytes" << std::endl;
-        
-    }
-}
+std::atomic<uint32_t> IPCReceiver::next_client_id{1};
+
 
 int main() {
-    std::cout << "IPC Receiver with TCP/IP-like reassembly" << std::endl;
-    
-    IPCReceiver receiver;
-    if (!receiver.is_valid()) {
-        std::cerr << "Failed to initialize receiver!" << std::endl;
-        return 1;
-    }
-    
     IPC::MessageAssembler assembler;
-    std::atomic<bool> running = true;
-    
-    std::thread cleaner([&assembler, &running]() {
-        while (running) {
-            std::this_thread::sleep_for(std::chrono::seconds(30));
-            assembler.cleanup_old_messages();
-        }
+    IPCReceiver receiver;
+
+    std::thread server([&] {
+        receiver.run(assembler);
     });
-    
-    std::cout << "Waiting for messages..." << std::endl;
-    
-    size_t total_fragments_received = 0;
-    size_t total_messages_received = 0;
-    
-    try {
-        while (running) {
-            IPC::Fragment fragment;
-            
-            if (receiver.receive_fragment(fragment)) {
-                total_fragments_received++;
-                
-                bool complete = assembler.add_fragment(fragment);
-                
-                if (complete) {
-                    auto message = assembler.get_assembled_message(
-                        fragment.header.message_id);
-                    
-                    if (message.complete) {
-                        total_messages_received++;
-                        
-                        message_callback(message);
-                        
-                        std::cout << "\n[Receiver] Total: " 
-                                  << total_messages_received << " messages, "
-                                  << total_fragments_received << " fragments received" << std::endl;
-                    }
-                }
-                
-                if (total_fragments_received % 100 == 0) {
-                    std::cout << "[Receiver] Progress: " 
-                              << total_fragments_received << " fragments received" << std::endl;
-                }
-                
-            } else {
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            }
-        }
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    
-    running = false;
-    cleaner.join();
-    
-    std::cout << "\nReceiver shutdown. Final stats:" << std::endl;
-    std::cout << "Total fragments received: " << total_fragments_received << std::endl;
-    std::cout << "Total messages received: " << total_messages_received << std::endl;
-    
+
+    receiver.stop();
+    server.join();
+
     return 0;
 }

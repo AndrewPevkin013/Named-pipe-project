@@ -12,6 +12,7 @@ namespace IPC {
     #pragma pack(push, 1)
 
     struct FragmentHeader {
+        uint32_t sender_id;
         uint64_t message_id;
         uint32_t total_size;
         uint32_t fragment_size;
@@ -28,11 +29,17 @@ namespace IPC {
             else flags &= ~0x01; 
         }
     };
+
+    enum FragmentFlags : uint8_t {
+        FLAG_DATA = 0x00,
+        FLAG_LAST = 0x01,
+        FLAG_ACK  = 0x02
+    };
     
-    static_assert(sizeof(FragmentHeader) == 40, "FragmentHeader size mismatch");
-    constexpr size_t MIN_FRAGMENT_SIZE = 1024;
-    constexpr size_t MAX_FRAGMENT_SIZE = 65536;
+    constexpr size_t MIN_FRAGMENT_SIZE = 64;
+    constexpr size_t MAX_FRAGMENT_SIZE = 64 * 1024;
     constexpr size_t HEADER_SIZE = sizeof(FragmentHeader);
+    static_assert(sizeof(FragmentHeader) == HEADER_SIZE, "FragmentHeader size mismatch");
 
     struct Fragment {
         FragmentHeader header;
@@ -45,12 +52,8 @@ namespace IPC {
 
     #pragma pack(pop)
 
-
-    struct AckPacket {
+    struct AckPayload {
         uint64_t message_id;
-        uint32_t received_fragments;
-        uint32_t total_fragments;
-        bool complete;
     };
 
     class MessageFragmenter {
@@ -61,7 +64,7 @@ namespace IPC {
         Fragment create_control_message(const std::vector<char>& data, uint8_t flags = 0);
     
     private:
-        size_t calculate_optimal_fragment_size(size_t total_message_size) const;
+        size_t calculate_fragment_size(size_t total_message_size) const;
         std::atomic<uint64_t> next_message_id_;
     };
 
