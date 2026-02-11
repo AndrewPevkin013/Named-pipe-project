@@ -193,9 +193,9 @@ void log_line(const std::string& line) {
 class IPCReceiver {
 public:
     static std::atomic<uint32_t> next_client_id;
-    IPCReceiver() : running_(true) {}
+    explicit IPCReceiver(ServerSendQueue& send_queue) : send_queue_(send_queue), running_(true) {}
 
-    void run(IPC::MessageAssembler& assembler) {
+    void run() {
         log_line("[Receiver] Waiting for connections...");
 
         while (running_) {
@@ -222,16 +222,17 @@ public:
             std::thread(
                 &IPCReceiver::client_loop,
                 this,
-                pipe,
-                std::ref(assembler)
+                pipe
             ).detach();
         }
     }
 
 private:
-    void client_loop(HANDLE pipe, IPC::MessageAssembler& assembler) {
+    ServerSendQueue& send_queue_;
+    std::atomic<bool> running_;
+    void client_loop(HANDLE pipe) {
         uint32_t client_id = next_client_id++;
-
+        IPC::MessageAssembler assembler;
         log_line("[CONNECT] client_id=" + std::to_string(client_id));
 
         while (running_) {
@@ -288,19 +289,14 @@ private:
         ack.header.flags      = IPC::FLAG_ACK | IPC::FLAG_LAST;
         ack.header.fragment_size = 0;
 
-        DWORD written = 0;
-        uint32_t size = sizeof(ack.header);
-
-        WriteFile(pipe, &size, sizeof(size), &written, nullptr);
-        WriteFile(pipe, &ack.header, sizeof(ack.header), &written, nullptr);
+        send_queue_.push(pipe, std::move(ack));
     }
-
-    std::atomic<bool> running_;
 };
 
 std::atomic<uint32_t> IPCReceiver::next_client_id{1};
 
 int main() {
+    ServerSendQueue send_queue;
     std::filesystem::create_directories(SERVER_LOG_DIR);
     server_log.open(SERVER_LOG_FILE, std::ios::out | std::ios::trunc);
 
@@ -308,8 +304,7 @@ int main() {
         std::cerr << "[Server] Failed to open log file\n";
     }
 
-    IPC::MessageAssembler assembler;
-    IPCReceiver receiver;
-    receiver.run(assembler);
+    IPCReceiver receiver(send_queue);
+    receiver.run();
     return 0;
 }

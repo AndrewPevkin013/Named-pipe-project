@@ -20,7 +20,7 @@ public:
     ~ServerSendQueue();
 
     void push(HANDLE pipe, IPC::Fragment fragment);
-    void push_immediate(HANDLE pipe, const IPC::Fragment& fragment);
+    // void push_immediate(HANDLE pipe, const IPC::Fragment& fragment);
     void stop();
 
 private:
