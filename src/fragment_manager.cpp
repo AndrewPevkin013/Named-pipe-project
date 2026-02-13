@@ -23,7 +23,6 @@ size_t MessageFragmenter::calculate_fragment_size(size_t total_message_size) con
 
 std::vector<Fragment> MessageFragmenter::fragment_message(const std::vector<char>& message_data) {
     size_t fragment_size = calculate_fragment_size(message_data.size());
-    
     return fragment_message_with_size(message_data, fragment_size);
 }
 
@@ -33,7 +32,6 @@ std::vector<Fragment> MessageFragmenter::fragment_message_with_size(const std::v
     uint64_t message_id = next_message_id_++;
     size_t total_size = message_data.size();
     size_t total_fragments = (total_size + fragment_size - 1) / fragment_size;
-
     std::vector<Fragment> fragments;
     fragments.reserve(total_fragments);
 
@@ -50,7 +48,6 @@ std::vector<Fragment> MessageFragmenter::fragment_message_with_size(const std::v
         f.header.flags = (i + 1 == total_fragments) ? FLAG_LAST : FLAG_DATA;
 
         f.data.insert(f.data.end(), message_data.begin() + offset, message_data.begin() + offset + size);
-
         fragments.push_back(std::move(f));
     }
 

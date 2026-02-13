@@ -6,6 +6,8 @@
 #include <condition_variable>
 #include <atomic>
 #include <windows.h>
+#include <string>
+#include <iostream>
 
 #include "ipc_protocol.hpp"
 
@@ -18,14 +20,12 @@ class ServerSendQueue {
 public:
     ServerSendQueue();
     ~ServerSendQueue();
-
     void push(HANDLE pipe, IPC::Fragment fragment);
-    // void push_immediate(HANDLE pipe, const IPC::Fragment& fragment);
+    void push_immediate(HANDLE pipe, const IPC::Fragment& fragment);
     void stop();
 
 private:
     void writer_loop();
-
     std::queue<ServerTask> queue_;
     std::mutex mutex_;
     std::condition_variable cv_;

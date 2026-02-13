@@ -1,11 +1,10 @@
 #include "../include/ipc_sender.hpp"
 #include <iostream>
 #include <vector>
-#include <cstring>
 
 #ifdef _WIN32
-#include <windows.h>
-constexpr const char* PIPE_NAME = "\\\\.\\pipe\\IPCTestPipe";
+    #include <windows.h>
+    constexpr const char* PIPE_NAME = "\\\\.\\pipe\\IPCTestPipe";
 #endif
 
 IPCSender::IPCSender(uint32_t client_id) : client_id_(client_id) {

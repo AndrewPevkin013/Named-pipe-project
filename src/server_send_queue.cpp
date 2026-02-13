@@ -23,17 +23,45 @@ void ServerSendQueue::push(HANDLE pipe, IPC::Fragment fragment) {
     cv_.notify_one();
 }
 
-// void ServerSendQueue::push_immediate(HANDLE pipe, const IPC::Fragment& fragment) {
-//     DWORD written = 0;
-//     uint32_t packet_size = sizeof(IPC::FragmentHeader) + static_cast<uint32_t>(fragment.data.size());
+void ServerSendQueue::push_immediate(HANDLE pipe, const IPC::Fragment& fragment) {
+    DWORD written = 0;
+    uint32_t packet_size =
+        sizeof(IPC::FragmentHeader) +
+        static_cast<uint32_t>(fragment.data.size());
 
-//     WriteFile(pipe, &packet_size, sizeof(packet_size), &written, nullptr);
-//     WriteFile(pipe, &fragment.header, sizeof(fragment.header), &written, nullptr);
+    BOOL ok = WriteFile(pipe, &packet_size, sizeof(packet_size), &written, nullptr);
+    if (!ok) {
+        DWORD err = GetLastError();
+        std::cout << "[ERROR] ACK write packet_size failed. err=" << std::to_string(err);
+        return;
+    }
 
-//     if (!fragment.data.empty()) {
-//         WriteFile(pipe, fragment.data.data(), static_cast<DWORD>(fragment.data.size()), &written, nullptr);
-//     }
-// }
+    ok = WriteFile(pipe, &fragment.header, sizeof(fragment.header), &written, nullptr);
+    if (!ok) {
+        DWORD err = GetLastError();
+        std::cout << "[ERROR] ACK write header failed. err=" << std::to_string(err);
+        return;
+    }
+
+    if (!fragment.data.empty()) {
+        ok = WriteFile(
+            pipe,
+            fragment.data.data(),
+            static_cast<DWORD>(fragment.data.size()),
+            &written,
+            nullptr
+        );
+
+        if (!ok) {
+            DWORD err = GetLastError();
+            std::cout << "[ERROR] ACK write payload failed. err=" << std::to_string(err);
+            return;
+        }
+    }
+
+    std::cout << "[ACK SENT] msg_id=" << std::to_string(fragment.header.message_id);
+}
+
 
 void ServerSendQueue::writer_loop() {
     while (running_ || !queue_.empty()) {
@@ -53,11 +81,34 @@ void ServerSendQueue::writer_loop() {
         DWORD written = 0;
         uint32_t packet_size = sizeof(IPC::FragmentHeader) + static_cast<uint32_t>(task.fragment.data.size());
 
-        WriteFile(task.pipe, &packet_size, sizeof(packet_size), &written, nullptr);
-        WriteFile(task.pipe, &task.fragment.header, sizeof(task.fragment.header), &written, nullptr);
+        BOOL ok = WriteFile(task.pipe, &packet_size, sizeof(packet_size), &written, nullptr);
+        if (!ok) {
+            DWORD err = GetLastError();
+            std::cout << "[ERROR] Write packet_size failed. err=" << std::to_string(err);
+            continue;
+        }
+
+        ok = WriteFile(task.pipe, &task.fragment.header, sizeof(task.fragment.header), &written, nullptr);
+        if (!ok) {
+            DWORD err = GetLastError();
+            std::cout << "[ERROR] Write header failed. err=" << std::to_string(err);
+            continue;
+        }
 
         if (!task.fragment.data.empty()) {
-            WriteFile(task.pipe, task.fragment.data.data(), static_cast<DWORD>(task.fragment.data.size()), &written, nullptr);
+            ok = WriteFile(
+                task.pipe,
+                task.fragment.data.data(),
+                static_cast<DWORD>(task.fragment.data.size()),
+                &written,
+                nullptr
+            );
+
+            if (!ok) {
+                DWORD err = GetLastError();
+                std::cout << "[ERROR] Write payload failed. err=" << std::to_string(err);
+                continue;
+            }
         }
     }
 }

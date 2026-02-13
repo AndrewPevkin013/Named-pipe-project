@@ -29,21 +29,16 @@ int main() {
         std::tm tm_now = *std::localtime(&time_t_now);
 
         std::ostringstream meta;
-        meta << "type:text\n"
-             << "size:" << body.size() << "\n"
-             << "timestamp:" 
-             << std::put_time(&tm_now, "%Y-%m-%d %H:%M:%S") << "\n";
+        meta << "type:text\n" << "size:" << body.size() << "\n" 
+            << "timestamp:" << std::put_time(&tm_now, "%Y-%m-%d %H:%M:%S") << "\n";
 
         std::string metadata = meta.str();
-
         std::vector<char> full_message;
         full_message.insert(full_message.end(), metadata.begin(), metadata.end());
         full_message.insert(full_message.end(), body.begin(), body.end());
 
         auto fragments = fragmenter.fragment_message(full_message);
-
         std::cout << "Queued " << fragments.size() << " fragment(s)\n";
-
         uint64_t message_id = fragments.front().header.message_id;
 
         for (auto& fragment : fragments) {

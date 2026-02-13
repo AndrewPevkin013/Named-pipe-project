@@ -7,25 +7,29 @@ namespace IPC {
 bool MessageAssembler::add_fragment(const Fragment& fragment) {
     std::lock_guard<std::mutex> lock(mutex_);
     
-    uint64_t message_id = fragment.header.message_id;
-    
-    auto it = assembly_map_.find(message_id);
+    MessageKey key {
+        fragment.header.sender_id,
+        fragment.header.message_id
+    };
+
+    auto it = assembly_map_.find(key);
+
     if (it == assembly_map_.end()) {
         AssemblyState state;
-        state.message_id = message_id;
+        state.message_id = fragment.header.message_id;
         state.total_size = fragment.header.total_size;
         state.total_fragments = fragment.header.total_fragments;
         state.fragments.resize(state.total_fragments);
         state.received.resize(state.total_fragments, false);
         state.created_at = std::chrono::steady_clock::now();
         
-        it = assembly_map_.insert({message_id, state}).first;
+        it = assembly_map_.insert({key, state}).first;
     }
     
     AssemblyState& state = it->second;
     
     if (fragment.header.total_fragments != state.total_fragments || fragment.header.total_size != state.total_size) {
-        std::cerr << "[Assembler] Fragment mismatch for message " << message_id << std::endl;
+        std::cerr << "[Assembler] Fragment mismatch for message " << fragment.header.message_id << std::endl;
         return false;
     }
     
@@ -39,19 +43,21 @@ bool MessageAssembler::add_fragment(const Fragment& fragment) {
     state.received_count++;
     
     if (state.received_count % 10 == 0 || state.is_complete()) {
-        std::cout << "[Assembler] Message " << message_id << ": " << state.received_count << "/" << state.total_fragments << " fragments received" << std::endl;
+        std::cout << "[Assembler] Message " << fragment.header.message_id << ": " << state.received_count << "/" << state.total_fragments << " fragments received" << std::endl;
     }
     
     return state.is_complete();
 }
 
-MessageAssembler::AssembledMessage MessageAssembler::get_assembled_message(uint64_t message_id) {
+MessageAssembler::AssembledMessage MessageAssembler::get_assembled_message(uint32_t sender_id, uint64_t message_id) {
     std::lock_guard<std::mutex> lock(mutex_);
     
     AssembledMessage result;
     result.message_id = message_id;
     
-    auto it = assembly_map_.find(message_id);
+    MessageKey key { sender_id, message_id };
+    auto it = assembly_map_.find(key);
+
     if (it == assembly_map_.end()) {
         return result;
     }
@@ -72,5 +78,4 @@ MessageAssembler::AssembledMessage MessageAssembler::get_assembled_message(uint6
     
     return result;
 }
-
 }

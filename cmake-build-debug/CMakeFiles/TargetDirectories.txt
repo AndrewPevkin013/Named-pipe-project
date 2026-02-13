@@ -1,0 +1,12 @@
+D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug/CMakeFiles/ipc_core.dir
+D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug/test_sender/CMakeFiles/test_sender.dir
+D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug/test_sender/CMakeFiles/edit_cache.dir
+D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug/test_sender/CMakeFiles/rebuild_cache.dir
+D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug/test_receiver/CMakeFiles/test_receiver.dir
+D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug/test_receiver/CMakeFiles/edit_cache.dir
+D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug/test_receiver/CMakeFiles/rebuild_cache.dir
+D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug/tests/CMakeFiles/ipc_stress_client.dir
+D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug/tests/CMakeFiles/edit_cache.dir
+D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug/tests/CMakeFiles/rebuild_cache.dir

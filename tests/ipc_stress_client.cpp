@@ -22,7 +22,6 @@ std::vector<char> random_message(size_t min, size_t max) {
     thread_local std::mt19937 rng{ std::random_device{}() };
     std::uniform_int_distribution<size_t> size_dist(min, max);
     std::uniform_int_distribution<int> char_dist(32, 126);
-
     size_t size = size_dist(rng);
     std::vector<char> msg(size);
     for (auto& c : msg)
@@ -51,7 +50,7 @@ void client_worker(int client_id, std::ofstream& log) {
         if (!send_ok) {
             failed++;
             std::lock_guard<std::mutex> lock(log_mutex);
-            log << "[CLIENT " << client_id << "] SEND FAILED msg_id=" << msg_id << "\n";
+            log << "[CLIENT " << client_id << "] send Failed msg_id=" << msg_id << "\n";
             continue;
         }
 
@@ -64,7 +63,7 @@ void client_worker(int client_id, std::ofstream& log) {
         } else {
             failed++;
             std::lock_guard<std::mutex> lock(log_mutex);
-            log << "[CLIENT " << client_id << "] NO ACK msg_id=" << msg_id << "\n";
+            log << "[CLIENT " << client_id << "] No ACK msg_id=" << msg_id << "\n";
         }
     }
 }
@@ -90,15 +89,16 @@ int main() {
     auto end = std::chrono::steady_clock::now();
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-    std::cout << "\n===== STRESS TEST RESULT =====\n";
+    std::cout << "Test results:\n";
     std::cout << "Clients: " << CLIENT_COUNT << "\n";
     std::cout << "Messages/client: " << MESSAGES_PER_CLIENT << "\n";
     std::cout << "Success: " << success << "\n";
-    std::cout << "Failed:  " << failed << "\n";
+    std::cout << "Failed: " << failed << "\n";
     std::cout << "Time(ms): " << ms << "\n";
-    std::cout << "Msg/sec: "
-              << ((CLIENT_COUNT * MESSAGES_PER_CLIENT) * 1000.0 / ms)
-              << "\n";
+    std::cout << "Msg/sec: " << ((CLIENT_COUNT * MESSAGES_PER_CLIENT) * 1000.0 / ms) << "\n";
 
+    #ifdef _WIN32
+        system("pause");
+    #endif
     return 0;
 }

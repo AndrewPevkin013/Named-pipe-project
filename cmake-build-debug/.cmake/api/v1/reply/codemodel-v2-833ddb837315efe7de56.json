@@ -1,0 +1,152 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "test_sender",
+					"jsonFile" : "directory-test_sender-Debug-13a8a0163db07584f245.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "test_sender",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "test_receiver",
+					"jsonFile" : "directory-test_receiver-Debug-c1551acec049bf7e62eb.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "test_receiver",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "tests",
+					"jsonFile" : "directory-tests-Debug-70e4927a02b591d5c1f8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "tests",
+					"targetIndexes" : 
+					[
+						1
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2
+					],
+					"name" : "CrossPlatformIPC",
+					"targetIndexes" : 
+					[
+						0,
+						2,
+						3
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3
+					],
+					"name" : "ipc_tests",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ipc_core::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ipc_core-Debug-4d81bce4dabfdd921ae5.json",
+					"name" : "ipc_core",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ipc_stress_client::@a44f0ac069e85531cdee",
+					"jsonFile" : "target-ipc_stress_client-Debug-c522c99a90bae905d07b.json",
+					"name" : "ipc_stress_client",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "test_receiver::@1c8ee84ccd4a95c110aa",
+					"jsonFile" : "target-test_receiver-Debug-47b824899763454d344f.json",
+					"name" : "test_receiver",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "test_sender::@be4aaf0c3c584068fd01",
+					"jsonFile" : "target-test_sender-Debug-ef6bba6bf744aa0a06a4.json",
+					"name" : "test_sender",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/Programming/CLionProjects/NamedPipesProject/cmake-build-debug",
+		"source" : "D:/Programming/CLionProjects/NamedPipesProject"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

@@ -75,9 +75,20 @@ namespace IPC {
             std::vector<char> data;
             bool complete = false;
         };
+
+        struct MessageKey {
+            uint32_t sender_id;
+            uint64_t message_id;
+
+            bool operator<(const MessageKey& other) const {
+                if (sender_id != other.sender_id)
+                    return sender_id < other.sender_id;
+                return message_id < other.message_id;
+            }
+        };
         
         bool add_fragment(const Fragment& fragment);
-        AssembledMessage get_assembled_message(uint64_t message_id);
+        AssembledMessage get_assembled_message(uint32_t sender_id, uint64_t message_id);
     
     private:
         struct AssemblyState {
@@ -93,7 +104,7 @@ namespace IPC {
                 return received_count == total_fragments;
             }
         };
-        std::map<uint64_t, AssemblyState> assembly_map_;
+        std::map<MessageKey, AssemblyState> assembly_map_;
         mutable std::mutex mutex_;
     };
 }
