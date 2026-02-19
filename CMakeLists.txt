@@ -13,6 +13,7 @@ add_library(ipc_core STATIC
     src/message_assembler.cpp
     src/server_send_queue.cpp
     src/ipc_sender.cpp
+    src/ipc_receiver.cpp
 )
 
 target_include_directories(ipc_core PUBLIC ${CMAKE_SOURCE_DIR}/include)

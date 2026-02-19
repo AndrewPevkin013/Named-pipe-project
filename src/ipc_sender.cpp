@@ -1,13 +1,19 @@
 #include "../include/ipc_sender.hpp"
+
 #include <iostream>
-#include <vector>
+#include <chrono>
+#include <iomanip>
+#include <sstream>
 
 #ifdef _WIN32
-    #include <windows.h>
     constexpr const char* PIPE_NAME = "\\\\.\\pipe\\IPCTestPipe";
 #endif
 
-IPCSender::IPCSender(uint32_t client_id) : client_id_(client_id) {
+IPCSender::IPCSender() {
+    connect();
+}
+
+bool IPCSender::connect() {
 #ifdef _WIN32
     while (true) {
         pipe_ = CreateFileA(
@@ -21,19 +27,55 @@ IPCSender::IPCSender(uint32_t client_id) : client_id_(client_id) {
         );
 
         if (pipe_ != INVALID_HANDLE_VALUE)
-            break;
+            return true;
 
         if (GetLastError() != ERROR_PIPE_BUSY) {
             std::cerr << "[Client] Failed to connect to pipe\n";
-            return;
+            return false;
         }
 
         if (!WaitNamedPipeA(PIPE_NAME, 5000)) {
             std::cerr << "[Client] Pipe wait timeout\n";
-            return;
+            return false;
         }
     }
 #endif
+    return false;
+}
+
+bool IPCSender::send(const std::string& message) {
+    if (IPCSender::pipe_ == INVALID_HANDLE_VALUE)
+        return false;
+
+    std::vector<char> body(message.begin(), message.end());
+
+    auto now = std::chrono::system_clock::now();
+    auto time_t_now = std::chrono::system_clock::to_time_t(now);
+    std::tm tm_now = *std::localtime(&time_t_now);
+
+    std::ostringstream meta;
+    meta << "type:text\n"
+         << "size:" << body.size() << "\n"
+         << "timestamp:" << std::put_time(&tm_now, "%Y-%m-%d %H:%M:%S") << "\n";
+
+    std::string metadata = meta.str();
+
+    std::vector<char> full_message;
+    full_message.insert(full_message.end(), metadata.begin(), metadata.end());
+    full_message.insert(full_message.end(), body.begin(), body.end());
+
+    auto fragments = fragmenter_.fragment_message(full_message);
+    if (fragments.empty())
+        return false;
+
+    uint64_t message_id = fragments.front().header.message_id;
+
+    for (auto& fragment : fragments) {
+        if (!send_fragment(fragment))
+            return false;
+    }
+
+    return wait_for_ack(message_id);
 }
 
 IPCSender::~IPCSender() {

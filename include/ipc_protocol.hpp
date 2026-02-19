@@ -21,9 +21,6 @@ namespace IPC {
         uint8_t flags;
         uint8_t reserved[15];
 
-        bool is_last() const {
-            return flags & 0x01;
-        }
         void set_last(bool last) {
             if (last) flags |= 0x01;
             else flags &= ~0x01; 
@@ -44,10 +41,6 @@ namespace IPC {
     struct Fragment {
         FragmentHeader header;
         std::vector<char> data;
-
-        size_t total_packet_size() const {
-            return HEADER_SIZE + data.size();
-        }
     };
 
     #pragma pack(pop)
