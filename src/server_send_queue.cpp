@@ -25,9 +25,7 @@ void ServerSendQueue::push(HANDLE pipe, IPC::Fragment fragment) {
 
 void ServerSendQueue::push_immediate(HANDLE pipe, const IPC::Fragment& fragment) {
     DWORD written = 0;
-    uint32_t packet_size =
-        sizeof(IPC::FragmentHeader) +
-        static_cast<uint32_t>(fragment.data.size());
+    uint32_t packet_size = sizeof(IPC::FragmentHeader) + static_cast<uint32_t>(fragment.data.size());
 
     BOOL ok = WriteFile(pipe, &packet_size, sizeof(packet_size), &written, nullptr);
     if (!ok) {

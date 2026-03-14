@@ -7,6 +7,8 @@
 #include <mutex>
 #include <map>
 #include <atomic>
+#include <functional>
+#include <optional>
 
 namespace IPC {
     #pragma pack(push, 1)
@@ -34,7 +36,8 @@ namespace IPC {
     };
     
     constexpr size_t MIN_FRAGMENT_SIZE = 1;
-    constexpr size_t MAX_FRAGMENT_SIZE = 64 * 1024;
+    // constexpr size_t MAX_FRAGMENT_SIZE = 64 * 1024;
+    constexpr size_t MAX_FRAGMENT_SIZE = 50 * 1024 * 1024; // изменил порог для проверки передачи фрагментов по 50 МБ (для тестов)
     constexpr size_t HEADER_SIZE = sizeof(FragmentHeader);
     static_assert(sizeof(FragmentHeader) == HEADER_SIZE, "FragmentHeader size mismatch");
 
@@ -49,15 +52,43 @@ namespace IPC {
         uint64_t message_id;
     };
 
+    class FragmentView {
+    public:
+        FragmentView(const FragmentHeader& h, const char* d, size_t s) 
+            : header_(h), data_(d), size_(s) {}
+        
+        const FragmentHeader& header() const { return header_; }
+        const char* data() const { return data_; }
+        size_t size() const { return size_; }
+        
+        Fragment to_fragment() const {
+            Fragment f;
+            f.header = header_;
+            f.data.assign(data_, data_ + size_);
+            return f;
+        }
+        
+    private:
+        FragmentHeader header_;
+        const char* data_;
+        size_t size_;
+    };
+
+    using FragmentCallback = std::function<bool(const FragmentView&)>;
+
+
     class MessageFragmenter {
     public:
         MessageFragmenter() : next_message_id_(1) {}
         std::vector<Fragment> fragment_message(const std::vector<char>& message_data);
         std::vector<Fragment> fragment_message_with_size(const std::vector<char>& message_data, size_t fragment_size);
         Fragment create_control_message(const std::vector<char>& data, uint8_t flags = 0);
+        bool fragment_message_stream(const std::vector<char>& message_data, FragmentCallback callback);
+        bool fragment_message_stream_with_size(const std::vector<char>& message_data, size_t fragment_size, FragmentCallback callback);
     
     private:
         size_t calculate_fragment_size(size_t total_message_size) const;
+        void fill_fragment(Fragment& f, uint64_t message_id, size_t total_size, size_t fragment_size, size_t fragment_index, size_t total_fragments, const std::vector<char>& message_data);
         std::atomic<uint64_t> next_message_id_;
     };
 

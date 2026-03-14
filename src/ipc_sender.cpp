@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iomanip>
 #include <sstream>
+#include <optional>
 
 #ifdef _WIN32
     constexpr const char* PIPE_NAME = "\\\\.\\pipe\\IPCTestPipe";
@@ -64,18 +65,48 @@ bool IPCSender::send(const std::string& message) {
     full_message.insert(full_message.end(), metadata.begin(), metadata.end());
     full_message.insert(full_message.end(), body.begin(), body.end());
 
-    auto fragments = fragmenter_.fragment_message(full_message);
-    if (fragments.empty())
+    std::optional<uint64_t> message_id;
+        bool success = fragmenter_.fragment_message_stream(full_message,
+        [this, &message_id](const IPC::FragmentView& view) -> bool {
+            if (!message_id) {
+                message_id = view.header().message_id;
+            }
+            return send_fragment(view);
+        });
+    
+    if (!success || !message_id) {
+        return false;
+    }
+    return wait_for_ack(*message_id);
+}
+
+
+
+bool IPCSender::send_fragment(const IPC::FragmentView& view) {
+#ifdef _WIN32
+    if (pipe_ == INVALID_HANDLE_VALUE)
         return false;
 
-    uint64_t message_id = fragments.front().header.message_id;
+    IPC::FragmentHeader header = view.header();
+    header.sender_id = client_id_;
 
-    for (auto& fragment : fragments) {
-        if (!send_fragment(fragment))
+    uint32_t packet_size = sizeof(IPC::FragmentHeader) + static_cast<uint32_t>(view.size());
+    DWORD written = 0;
+
+    if (!WriteFile(pipe_, &packet_size, sizeof(packet_size), &written, nullptr))
+        return false;
+
+    if (!WriteFile(pipe_, &header, sizeof(header), &written, nullptr))
+        return false;
+
+    if (view.size() > 0) {
+        if (!WriteFile(pipe_, view.data(), static_cast<DWORD>(view.size()), &written, nullptr))
             return false;
     }
 
-    return wait_for_ack(message_id);
+    return true;
+#endif
+    return false;
 }
 
 IPCSender::~IPCSender() {
@@ -148,4 +179,41 @@ bool IPCSender::wait_for_ack(uint64_t expected_message_id) {
     return true;
 #endif
     return false;
+}
+
+
+bool IPCSender::send_with_fragment_size(const std::string& message, size_t fragment_size) {
+    if (pipe_ == INVALID_HANDLE_VALUE)
+        return false;
+
+    std::vector<char> body(message.begin(), message.end());
+
+    auto now = std::chrono::system_clock::now();
+    auto time_t_now = std::chrono::system_clock::to_time_t(now);
+    std::tm tm_now = *std::localtime(&time_t_now);
+
+    std::ostringstream meta;
+    meta << "type:text\n"
+         << "size:" << body.size() << "\n"
+         << "timestamp:" << std::put_time(&tm_now, "%Y-%m-%d %H:%M:%S") << "\n";
+
+    std::string metadata = meta.str();
+
+    std::vector<char> full_message;
+    full_message.insert(full_message.end(), metadata.begin(), metadata.end());
+    full_message.insert(full_message.end(), body.begin(), body.end());
+
+    std::optional<uint64_t> message_id;
+    bool success = fragmenter_.fragment_message_stream_with_size(full_message, fragment_size,
+        [this, &message_id](const IPC::FragmentView& view) -> bool {
+            if (!message_id) {
+                message_id = view.header().message_id;
+            }
+            return send_fragment(view);
+        });
+    
+    if (!success || !message_id) {
+        return false;
+    }
+    return wait_for_ack(*message_id);
 }
