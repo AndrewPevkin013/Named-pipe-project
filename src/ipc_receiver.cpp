@@ -33,6 +33,10 @@ void IPCReceiver::run() {
     }
 }   
 
+void IPCReceiver::set_message_handler(MessageHandler handler) {
+    message_handler_ = std::move(handler);
+}
+
 IPCReceiver::IPCReceiver() : running_(true) {
     std::filesystem::create_directories(SERVER_LOG_DIR);
     server_log.open(SERVER_LOG_FILE, std::ios::out | std::ios::trunc);
@@ -80,6 +84,10 @@ void IPCReceiver::client_loop(HANDLE pipe) {
                     " msg_id=" + std::to_string(fragment.header.message_id) +
                     " size=" + std::to_string(msg.data.size())
                 );
+
+                if (message_handler_) {
+                    message_handler_(msg);
+                }
 
                 send_ack(pipe, fragment.header.message_id, client_id);
             }

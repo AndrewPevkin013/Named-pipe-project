@@ -8,6 +8,7 @@
 #include <thread>
 #include <fstream>
 #include <filesystem>
+#include <functional>
 #include <mutex>
 #include <iostream>
 #include <string>
@@ -24,7 +25,12 @@ public:
     std::ofstream server_log;
     void run();
 
+    using Message = IPC::MessageAssembler::AssembledMessage;
+    using MessageHandler = std::function<void(const Message&)>;
+    void set_message_handler(MessageHandler handler);
+
 private:
+    MessageHandler message_handler_;
     void log_line(const std::string& line);
     ServerSendQueue send_queue_;
     std::atomic<bool> running_;
