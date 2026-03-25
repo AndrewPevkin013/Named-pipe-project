@@ -3,7 +3,6 @@
 #include "server_send_queue.hpp"
 #include "ipc_protocol.hpp"
 
-#include <windows.h>
 #include <atomic>
 #include <thread>
 #include <fstream>
@@ -12,6 +11,15 @@
 #include <mutex>
 #include <iostream>
 #include <string>
+
+#ifdef _WIN32
+    #include <windows.h>
+#else
+    #include <sys/types.h>
+    #include <sys/stat.h>
+    #include <fcntl.h>
+    #include <unistd.h>
+#endif
 
 class IPCReceiver {
 public:
@@ -34,15 +42,16 @@ private:
     void log_line(const std::string& line);
     ServerSendQueue send_queue_;
     std::atomic<bool> running_;
-    void client_loop(HANDLE pipe);
-    bool receive(HANDLE pipe, IPC::Fragment& fragment);
-    void send_ack(HANDLE pipe, uint64_t msg_id, uint32_t /*client_id*/);
+    void client_loop(PipeHandle pipe);
+    bool receive(PipeHandle pipe, IPC::Fragment& fragment);
+    void send_ack(PipeHandle pipe, uint64_t msg_id, uint32_t /*client_id*/);
 
 #ifdef _WIN32
-    #include <windows.h>
+    using PipeHandle = HANDLE;
     const char* PIPE_NAME = "\\\\.\\pipe\\IPCTestPipe";
-    HANDLE pipe = INVALID_HANDLE_VALUE;
+    PipeHandle pipe = INVALID_HANDLE_VALUE;
 #else
-    int pipe = -1;
+    using PipeHandle = int;
+    const char* PIPE_NAME = "/tmp/ipc_pipe";
 #endif
 };

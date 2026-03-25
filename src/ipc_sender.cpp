@@ -8,7 +8,67 @@
 
 #ifdef _WIN32
     constexpr const char* PIPE_NAME = "\\\\.\\pipe\\IPCTestPipe";
+#else
+    constexpr const char* PIPE_NAME = "/tmp/ipc_pipe";
 #endif
+
+namespace {
+    bool write_all(
+#ifdef _WIN32
+        HANDLE pipe,
+#else
+        int pipe,
+#endif
+        const void* data,
+        size_t size
+    ) {
+        size_t total = 0;
+        const char* buf = static_cast<const char*>(data);
+
+        while (total < size) {
+#ifdef _WIN32
+            DWORD written = 0;
+            if (!WriteFile(pipe, buf + total, size - total, &written, nullptr))
+                return false;
+            total += written;
+#else
+            ssize_t written = write(pipe, buf + total, size - total);
+            if (written <= 0)
+                return false;
+            total += written;
+#endif
+        }
+        return true;
+    }
+
+    bool read_all(
+#ifdef _WIN32
+        HANDLE pipe,
+#else
+        int pipe,
+#endif
+        void* data,
+        size_t size
+    ) {
+        size_t total = 0;
+        char* buf = static_cast<char*>(data);
+
+        while (total < size) {
+#ifdef _WIN32
+            DWORD read = 0;
+            if (!ReadFile(pipe, buf + total, size - total, &read, nullptr))
+                return false;
+            total += read;
+#else
+            ssize_t r = read(pipe, buf + total, size - total);
+            if (r <= 0)
+                return false;
+            total += r;
+#endif
+        }
+        return true;
+    }
+}
 
 IPCSender::IPCSender() {
     connect();
@@ -40,8 +100,14 @@ bool IPCSender::connect() {
             return false;
         }
     }
+#else
+    pipe_ = open(PIPE_NAME, O_RDWR);
+    if (pipe_ == -1) {
+        perror("[Client] open failed");
+        return false;
+    }
+    return true;
 #endif
-    return false;
 }
 
 bool IPCSender::send(const std::string& message) {
@@ -84,77 +150,79 @@ bool IPCSender::send(const std::string& message) {
 
 bool IPCSender::send_fragment(const IPC::FragmentView& view) {
 #ifdef _WIN32
-    if (pipe_ == INVALID_HANDLE_VALUE)
-        return false;
+    if (pipe_ == INVALID_HANDLE_VALUE) return false;
+#else
+    if (pipe_ == -1) return false;
+#endif
 
     IPC::FragmentHeader header = view.header();
     header.sender_id = client_id_;
 
     uint32_t packet_size = sizeof(IPC::FragmentHeader) + static_cast<uint32_t>(view.size());
-    DWORD written = 0;
 
-    if (!WriteFile(pipe_, &packet_size, sizeof(packet_size), &written, nullptr))
+    if (!write_all(pipe_, &packet_size, sizeof(packet_size)))
         return false;
 
-    if (!WriteFile(pipe_, &header, sizeof(header), &written, nullptr))
+    if (!write_all(pipe_, &header, sizeof(header)))
         return false;
 
     if (view.size() > 0) {
-        if (!WriteFile(pipe_, view.data(), static_cast<DWORD>(view.size()), &written, nullptr))
+        if (!write_all(pipe_, view.data(), view.size()))
             return false;
     }
 
     return true;
-#endif
-    return false;
 }
 
 IPCSender::~IPCSender() {
 #ifdef _WIN32
     if (pipe_ != INVALID_HANDLE_VALUE)
         CloseHandle(pipe_);
+#else
+    if (pipe_ != -1)
+        close(pipe_);
 #endif
 }
 
-bool IPCSender::send_fragment(IPC::Fragment& fragment) {
-#ifdef _WIN32
-    if (pipe_ == INVALID_HANDLE_VALUE)
-        return false;
+// bool IPCSender::send_fragment(IPC::Fragment& fragment) {
+// #ifdef _WIN32
+//     if (pipe_ == INVALID_HANDLE_VALUE)
+//         return false;
 
-    fragment.header.sender_id = client_id_;
+//     fragment.header.sender_id = client_id_;
 
-    uint32_t packet_size = sizeof(IPC::FragmentHeader) + static_cast<uint32_t>(fragment.data.size());
-    DWORD written = 0;
+//     uint32_t packet_size = sizeof(IPC::FragmentHeader) + static_cast<uint32_t>(fragment.data.size());
+//     DWORD written = 0;
 
-    if (!WriteFile(pipe_, &packet_size, sizeof(packet_size), &written, nullptr))
-        return false;
+//     if (!WriteFile(pipe_, &packet_size, sizeof(packet_size), &written, nullptr))
+//         return false;
 
-    if (!WriteFile(pipe_, &fragment.header, sizeof(fragment.header), &written, nullptr))
-        return false;
+//     if (!WriteFile(pipe_, &fragment.header, sizeof(fragment.header), &written, nullptr))
+//         return false;
 
-    if (!fragment.data.empty()) {
-        if (!WriteFile(pipe_, fragment.data.data(), static_cast<DWORD>(fragment.data.size()), &written, nullptr))
-            return false;
-    }
+//     if (!fragment.data.empty()) {
+//         if (!WriteFile(pipe_, fragment.data.data(), static_cast<DWORD>(fragment.data.size()), &written, nullptr))
+//             return false;
+//     }
 
-    return true;
-#endif
-    return false;
-}
+//     return true;
+// #endif
+//     return false;
+// }
 
 bool IPCSender::wait_for_ack(uint64_t expected_message_id) {
 #ifdef _WIN32
-    if (pipe_ == INVALID_HANDLE_VALUE)
-        return false;
+    if (pipe_ == INVALID_HANDLE_VALUE) return false;
+#else
+    if (pipe_ == -1) return false;
+#endif
 
-    DWORD read = 0;
     uint32_t packet_size = 0;
-
-    if (!ReadFile(pipe_, &packet_size, sizeof(packet_size), &read, nullptr))
+    if (!read_all(pipe_, &packet_size, sizeof(packet_size)))
         return false;
 
     IPC::FragmentHeader header{};
-    if (!ReadFile(pipe_, &header, sizeof(header), &read, nullptr))
+    if (!read_all(pipe_, &header, sizeof(header)))
         return false;
 
     if (!(header.flags & IPC::FLAG_ACK)) {
@@ -162,23 +230,16 @@ bool IPCSender::wait_for_ack(uint64_t expected_message_id) {
         return false;
     }
 
-    if (header.fragment_size != sizeof(IPC::AckPayload)) {
-        std::cerr << "[Client] Invalid ACK payload size\n";
-        return false;
-    }
-
     IPC::AckPayload payload{};
-    if (!ReadFile(pipe_, &payload, sizeof(payload), &read, nullptr))
+    if (!read_all(pipe_, &payload, sizeof(payload)))
         return false;
 
     if (payload.message_id != expected_message_id) {
-        std::cerr << "[Client] ACK mismatch, expected " << expected_message_id << ", got " << payload.message_id << "\n";
+        std::cerr << "[Client] ACK mismatch\n";
         return false;
     }
 
     return true;
-#endif
-    return false;
 }
 
 

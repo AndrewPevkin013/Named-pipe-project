@@ -5,6 +5,7 @@ std::atomic<uint32_t> IPCReceiver::next_client_id{1};
 void IPCReceiver::run() {
     log_line("[Receiver] Waiting for connections....");
 
+#ifdef _WIN32
     while (running_) {
         pipe = CreateNamedPipeA(
             PIPE_NAME,
@@ -25,12 +26,23 @@ void IPCReceiver::run() {
             continue;
         }
 
-        std::thread(
-            &IPCReceiver::client_loop,
-            this,
-            pipe
-        ).detach();
+        std::thread(&IPCReceiver::client_loop, this, pipe).detach();
     }
+
+#else
+    if (mkfifo(PIPE_NAME, 0666) < 0 && errno != EEXIST) {
+        perror("mkfifo");
+        return;
+    }
+
+    while (running_) {
+        int fd = open(PIPE_NAME, O_RDWR);
+        if (fd < 0)
+            continue;
+
+        std::thread(&IPCReceiver::client_loop, this, fd).detach();
+    }
+#endif
 }   
 
 void IPCReceiver::set_message_handler(MessageHandler handler) {
@@ -95,10 +107,15 @@ void IPCReceiver::client_loop(HANDLE pipe) {
     }
 
     log_line("\n[DISCONNECT] client_id=" + std::to_string(client_id));
+#ifdef _WIN32
     CloseHandle(pipe);
+#else
+    close(pipe);
+#endif
 }
 
-bool IPCReceiver::receive(HANDLE pipe, IPC::Fragment& fragment) {
+bool IPCReceiver::receive(PipeHandle pipe, IPC::Fragment& fragment) {
+#ifdef _WIN32
     DWORD read = 0;
     uint32_t packet_size = 0;
 
@@ -120,6 +137,29 @@ bool IPCReceiver::receive(HANDLE pipe, IPC::Fragment& fragment) {
     }
 
     return true;
+
+#else
+    ssize_t read_bytes;
+    uint32_t packet_size = 0;
+
+    read_bytes = read(pipe, &packet_size, sizeof(packet_size));
+    if (read_bytes <= 0)
+        return false;
+
+    read_bytes = read(pipe, &fragment.header, sizeof(fragment.header));
+    if (read_bytes <= 0)
+        return false;
+
+    fragment.data.resize(fragment.header.fragment_size);
+
+    if (!fragment.data.empty()) {
+        read_bytes = read(pipe, fragment.data.data(), fragment.header.fragment_size);
+        if (read_bytes <= 0)
+            return false;
+    }
+
+    return true;
+#endif
 }
 
 void IPCReceiver::send_ack(HANDLE pipe, uint64_t msg_id, uint32_t /*client_id*/) {

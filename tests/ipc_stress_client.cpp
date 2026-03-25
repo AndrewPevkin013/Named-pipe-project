@@ -20,7 +20,12 @@
 #ifdef _WIN32
     #include <windows.h>
     #include <psapi.h>
+#else
+    #include <sys/resource.h>
+    #include <unistd.h>
 #endif
+
+// TODO: исправить момент на принимающей стороне: во время тестов сообщения выводиться не должны!
 
 using namespace TestConfig;
 
@@ -48,18 +53,22 @@ const std::vector<size_t> MESSAGE_SIZES = {
 
 const std::vector<int> MESSAGE_COUNTS = {1, 5};
 
-// Замеры памяти
-#ifdef _WIN32
 size_t get_memory_usage() {
+#ifdef _WIN32
     PROCESS_MEMORY_COUNTERS_EX pmc;
-    if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc))) {
+    if (GetProcessMemoryInfo(GetCurrentProcess(),
+        (PROCESS_MEMORY_COUNTERS*)&pmc,
+        sizeof(pmc))) {
         return pmc.WorkingSetSize;
     }
     return 0;
-}
+#else
+    struct rusage usage{};
+    getrusage(RUSAGE_SELF, &usage);
+    return static_cast<size_t>(usage.ru_maxrss) * 1024;
 #endif
+}
 
-// Baseline memcpy (скорость копирования в памяти)
 double run_memcpy_test(size_t size_mb) {
     size_t bytes = size_mb * 1024 * 1024;
     std::vector<char> src(bytes, 'x');
@@ -70,15 +79,15 @@ double run_memcpy_test(size_t size_mb) {
     auto end = std::chrono::high_resolution_clock::now();
 
     double seconds = std::chrono::duration<double>(end - start).count();
-    return size_mb / seconds; // MB/s
+    return size_mb / seconds;
 }
 
 std::string generate_fixed_message(size_t size_bytes) {
     thread_local std::mt19937 rng{ std::random_device{}() };
     std::uniform_int_distribution<int> char_dist(32, 126);
 
-    std::string msg;
-    msg.resize(size_bytes);
+    std::string msg(size_bytes, ' ');
+
     for (size_t i = 0; i < size_bytes; ++i)
         msg[i] = static_cast<char>(char_dist(rng));
     return msg;
@@ -109,9 +118,11 @@ int main() {
 
     std::cout << "Baseline: memcpy 1 GB\n";
     double memcpy_speed = run_memcpy_test(1024);
-    std::cout << "Throughput: " << std::fixed << std::setprecision(2) << memcpy_speed << " MB/s\n";
+    std::cout << "Throughput: " << std::fixed << std::setprecision(2)
+              << memcpy_speed << " MB/s\n";
 
-    std::cout << "Extended performance analysis\n";
+    std::cout << "\nExtended performance analysis\n";
+
     std::cout << std::left
               << std::setw(8)  << "MsgSize"
               << std::setw(6)  << "MsgCnt"
@@ -128,13 +139,14 @@ int main() {
     for (size_t msg_size : MESSAGE_SIZES) {
         for (int msg_cnt : MESSAGE_COUNTS) {
             for (size_t fsize : FRAGMENT_SIZES) {
-                // Пропускаем нерелевантные конфигурации (фрагмент > сообщения для мелких сообщений)
-                if (fsize > msg_size && msg_size < 1024 * 1024) continue;
+
+                if (fsize > msg_size && msg_size < 1024 * 1024)
+                    continue;
 
                 std::vector<DetailedRunResult> runs;
 
                 for (int rep = 0; rep < REPETITIONS; ++rep) {
-                    // Замер памяти до
+
                     size_t mem_before = get_memory_usage();
 
                     IPCSender sender;
@@ -151,7 +163,13 @@ int main() {
                         std::vector<char> body(msg.begin(), msg.end());
                         auto now = std::chrono::system_clock::now();
                         auto time_t_now = std::chrono::system_clock::to_time_t(now);
-                        std::tm tm_now = *std::localtime(&time_t_now);
+
+                        std::tm tm_now{};
+#ifdef _WIN32
+                        localtime_s(&tm_now, &time_t_now);
+#else
+                        localtime_r(&time_t_now, &tm_now);
+#endif
 
                         std::ostringstream meta;
                         meta << "type:text\n"
@@ -172,48 +190,67 @@ int main() {
                             full_message,
                             fsize,
                             [&](const IPC::FragmentView& view) -> bool {
-                                if (!message_id) message_id = view.header().message_id;
-                                
+                                if (!message_id)
+                                    message_id = view.header().message_id;
+
                                 auto sys_start = std::chrono::high_resolution_clock::now();
                                 bool res = sender.send_fragment(view);
                                 auto sys_end = std::chrono::high_resolution_clock::now();
-                                
-                                msg_syscall_time += std::chrono::duration<double, std::milli>(sys_end - sys_start).count();
+
+                                msg_syscall_time += std::chrono::duration<double, std::milli>(
+                                    sys_end - sys_start).count();
+
                                 return res;
                             });
 
                         auto t2 = std::chrono::high_resolution_clock::now();
 
                         if (ok && message_id) {
-                            bool ack_ok = sender.wait_for_ack(*message_id);
-                            if (!ack_ok) ok = false;
+                            if (!sender.wait_for_ack(*message_id))
+                                ok = false;
                         } else {
                             ok = false;
                         }
 
                         if (ok) {
                             total_bytes += full_message.size();
-                            long long latency_us = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+
+                            long long latency_us =
+                                std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+
                             latencies_us.push_back(latency_us);
                             total_syscall_time += msg_syscall_time;
                         } else {
                             all_ok = false;
-                            log << "Failed: msg=" << m << " fragSize=" << fsize/1024 << "KB rep=" << rep << "\n";
+                            log << "Failed: msg=" << m
+                                << " frag=" << fsize/1024 << "KB"
+                                << " rep=" << rep << "\n";
                         }
                     }
 
                     auto test_end = std::chrono::high_resolution_clock::now();
 
-                    // Замер памяти после
                     size_t mem_after = get_memory_usage();
 
                     if (all_ok && !latencies_us.empty()) {
-                        double elapsed_ms = std::chrono::duration<double, std::milli>(test_end - test_start).count();
-                        double total_data_mb = static_cast<double>(total_bytes) / (1024.0 * 1024.0);
-                        double throughput = total_data_mb / (elapsed_ms / 1000.0);
-                        double avg_latency_ms = std::accumulate(latencies_us.begin(), latencies_us.end(), 0.0) / latencies_us.size() / 1000.0;
-                        long long delta = static_cast<long long>(mem_after) - static_cast<long long>(mem_before);
-                        double mem_delta_mb = delta / (1024.0 * 1024.0);
+                        double elapsed_ms =
+                            std::chrono::duration<double, std::milli>(test_end - test_start).count();
+
+                        double total_data_mb =
+                            static_cast<double>(total_bytes) / (1024.0 * 1024.0);
+
+                        double throughput =
+                            total_data_mb / (elapsed_ms / 1000.0);
+
+                        double avg_latency_ms =
+                            std::accumulate(latencies_us.begin(), latencies_us.end(), 0.0)
+                            / latencies_us.size() / 1000.0;
+
+                        long long delta =
+                            static_cast<long long>(mem_after) - static_cast<long long>(mem_before);
+
+                        double mem_delta_mb =
+                            delta / (1024.0 * 1024.0);
 
                         runs.push_back({
                             msg_cnt,
@@ -253,14 +290,10 @@ int main() {
                     double avg_mem = sum_mem / valid;
                     double avg_overhead = avg_time - avg_sys;
 
-                    std::string msg_size_str;
-                    if (msg_size < 1024) {
-                        msg_size_str = std::to_string(msg_size) + "B";
-                    } else if (msg_size < 1024 * 1024) {
-                        msg_size_str = std::to_string(msg_size / 1024) + "KB";
-                    } else {
-                        msg_size_str = std::to_string(msg_size / (1024 * 1024)) + "MB";
-                    }
+                    std::string msg_size_str =
+                        (msg_size < 1024) ? std::to_string(msg_size) + "B" :
+                        (msg_size < 1024*1024) ? std::to_string(msg_size/1024) + "KB" :
+                        std::to_string(msg_size/(1024*1024)) + "MB";
 
                     std::cout << std::left
                               << std::setw(8)  << msg_size_str
@@ -274,15 +307,6 @@ int main() {
                               << std::setw(16) << avg_sys
                               << std::setw(14) << avg_overhead
                               << std::setw(12) << avg_mem << "\n";
-                } else {
-                    std::string msg_size_str = (msg_size < 1024) ? std::to_string(msg_size) + "B" :
-                                               (msg_size < 1024*1024) ? std::to_string(msg_size/1024) + "KB" :
-                                               std::to_string(msg_size/(1024*1024)) + "MB";
-                    std::cout << std::left
-                              << std::setw(8)  << msg_size_str
-                              << std::setw(6)  << msg_cnt
-                              << std::setw(12) << (std::to_string(fsize/1024) + "KB")
-                              << "   failed\n";
                 }
             }
             std::cout << "\n";
