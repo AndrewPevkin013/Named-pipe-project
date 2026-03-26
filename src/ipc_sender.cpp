@@ -111,9 +111,13 @@ bool IPCSender::connect() {
 }
 
 bool IPCSender::send(const std::string& message) {
+#ifdef _WIN32
     if (IPCSender::pipe_ == INVALID_HANDLE_VALUE)
         return false;
-
+#else
+    if (IPCSender::pipe_ == -1)
+        return false;
+#endif
     std::vector<char> body(message.begin(), message.end());
 
     auto now = std::chrono::system_clock::now();
@@ -244,8 +248,13 @@ bool IPCSender::wait_for_ack(uint64_t expected_message_id) {
 
 
 bool IPCSender::send_with_fragment_size(const std::string& message, size_t fragment_size) {
-    if (pipe_ == INVALID_HANDLE_VALUE)
+#ifdef _WIN32
+    if (IPCSender::pipe_ == INVALID_HANDLE_VALUE)
         return false;
+#else
+    if (IPCSender::pipe_ == -1)
+        return false;
+#endif
 
     std::vector<char> body(message.begin(), message.end());
 

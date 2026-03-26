@@ -35,13 +35,20 @@ void IPCReceiver::run() {
         return;
     }
 
-    while (running_) {
-        int fd = open(PIPE_NAME, O_RDWR);
-        if (fd < 0)
-            continue;
-
-        std::thread(&IPCReceiver::client_loop, this, fd).detach();
+    if (mkfifo(PIPE_NAME, 0666) < 0 && errno != EEXIST) {
+    perror("mkfifo");
+        return;
     }
+
+    int fd = open(PIPE_NAME, O_RDWR);
+    if (fd < 0) {
+        perror("open");
+        return;
+    }
+
+    log_line("[Receiver] FIFO opened");
+
+    client_loop(fd); 
 #endif
 }   
 
@@ -74,7 +81,7 @@ void IPCReceiver::log_line(const std::string& line) {
     }
 }
 
-void IPCReceiver::client_loop(HANDLE pipe) {
+void IPCReceiver::client_loop(PipeHandle pipe) {
     uint32_t client_id = next_client_id++;
     IPC::MessageAssembler assembler;
     log_line("\n[CONNECT] client_id=" + std::to_string(client_id));
@@ -162,7 +169,7 @@ bool IPCReceiver::receive(PipeHandle pipe, IPC::Fragment& fragment) {
 #endif
 }
 
-void IPCReceiver::send_ack(HANDLE pipe, uint64_t msg_id, uint32_t /*client_id*/) {
+void IPCReceiver::send_ack(PipeHandle pipe, uint64_t msg_id, uint32_t /*client_id*/) {
     IPC::Fragment ack{};
     ack.header.sender_id = 0;
     ack.header.message_id = msg_id;

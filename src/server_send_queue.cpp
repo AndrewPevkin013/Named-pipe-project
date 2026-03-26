@@ -43,7 +43,7 @@ void ServerSendQueue::stop() {
         worker_.join();
 }
 
-void ServerSendQueue::push(HANDLE pipe, IPC::Fragment fragment) {
+void ServerSendQueue::push(PipeHandle pipe, IPC::Fragment fragment) {
     {
         std::lock_guard<std::mutex> lock(mutex_);
         queue_.push({ pipe, std::move(fragment) });
