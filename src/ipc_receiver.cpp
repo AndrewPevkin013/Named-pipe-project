@@ -30,20 +30,38 @@ void IPCReceiver::run() {
     }
 
 #else
-    if (mkfifo(PIPE_NAME, 0666) < 0 && errno != EEXIST) {
-        perror("mkfifo");
+    if (mkfifo(CONNECT_PIPE, 0666) < 0 && errno != EEXIST) {
+        perror("mkfifo connect");
         return;
     }
 
-    int fd = open(PIPE_NAME, O_RDWR);
-    if (fd < 0) {
-        perror("open");
+    int connect_fd = open(CONNECT_PIPE, O_RDONLY);
+    if (connect_fd < 0) {
+        perror("open connect");
         return;
     }
 
-    log_line("[Receiver] FIFO opened");
+    log_line("[Receiver] Waiting for clients...");
 
-    client_loop(fd); 
+    while (running_) {
+        char client_fifo[256] = {0};
+
+        ssize_t n = read(connect_fd, client_fifo, sizeof(client_fifo));
+        if (n <= 0)
+            continue;
+
+        std::string fifo_name(client_fifo);
+
+        log_line("[Receiver] New client FIFO: " + fifo_name);
+
+        int client_fd = open(fifo_name.c_str(), O_RDWR);
+        if (client_fd < 0) {
+            perror("open client fifo");
+            continue;
+        }
+
+        std::thread(&IPCReceiver::client_loop, this, client_fd).detach();
+    }
 #endif
 }   
 

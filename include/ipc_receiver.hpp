@@ -53,6 +53,6 @@ private:
     PipeHandle pipe = INVALID_HANDLE_VALUE;
 #else
     using PipeHandle = int;
-    const char* PIPE_NAME = "/tmp/ipc_pipe";
+    const char* PIPE_NAME = "/tmp/ipc_connect";
 #endif
 };

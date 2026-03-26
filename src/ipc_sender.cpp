@@ -101,11 +101,24 @@ bool IPCSender::connect() {
         }
     }
 #else
-    pipe_ = open(PIPE_NAME, O_RDWR);
-    if (pipe_ == -1) {
-        perror("[Client] open failed");
+    std::string client_fifo = "/tmp/ipc_client_" + std::to_string(getpid());
+
+    mkfifo(client_fifo.c_str(), 0666);
+    int connect_fd = open(CONNECT_PIPE, O_WRONLY);
+    if (connect_fd < 0) {
+        perror("[Client] open connect pipe");
         return false;
     }
+
+    write(connect_fd, client_fifo.c_str(), client_fifo.size() + 1);
+    close(connect_fd);
+
+    pipe_ = open(client_fifo.c_str(), O_RDWR);
+    if (pipe_ < 0) {
+        perror("[Client] open client fifo");
+        return false;
+    }
+
     return true;
 #endif
 }
@@ -185,6 +198,8 @@ IPCSender::~IPCSender() {
 #else
     if (pipe_ != -1)
         close(pipe_);
+    std::string client_fifo = "/tmp/ipc_client_" + std::to_string(getpid());
+    unlink(client_fifo.c_str());
 #endif
 }
 
