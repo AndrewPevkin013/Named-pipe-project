@@ -35,11 +35,6 @@ void IPCReceiver::run() {
         return;
     }
 
-    if (mkfifo(PIPE_NAME, 0666) < 0 && errno != EEXIST) {
-    perror("mkfifo");
-        return;
-    }
-
     int fd = open(PIPE_NAME, O_RDWR);
     if (fd < 0) {
         perror("open");
