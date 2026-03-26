@@ -9,7 +9,7 @@
 #ifdef _WIN32
     constexpr const char* PIPE_NAME = "\\\\.\\pipe\\IPCTestPipe";
 #else
-    constexpr const char* PIPE_NAME = "/tmp/ipc_pipe";
+    constexpr const char* CONNECT_PIPE = "/tmp/ipc_connect";
 #endif
 
 namespace {
@@ -110,7 +110,10 @@ bool IPCSender::connect() {
         return false;
     }
 
-    write(connect_fd, client_fifo.c_str(), client_fifo.size() + 1);
+    uint32_t len = client_fifo.size() + 1;
+
+    write_all(connect_fd, &len, sizeof(len));
+    write_all(connect_fd, client_fifo.c_str(), len);
     close(connect_fd);
 
     pipe_ = open(client_fifo.c_str(), O_RDWR);

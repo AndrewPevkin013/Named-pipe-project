@@ -2,6 +2,21 @@
 
 std::atomic<uint32_t> IPCReceiver::next_client_id{1};
 
+#ifndef _WIN32
+bool read_all(int fd, void* data, size_t size) {
+    size_t total = 0;
+    char* buf = static_cast<char*>(data);
+
+    while (total < size) {
+        ssize_t r = read(fd, buf + total, size - total);
+        if (r <= 0)
+            return false;
+        total += r;
+    }
+    return true;
+}
+#endif
+
 void IPCReceiver::run() {
     log_line("[Receiver] Waiting for connections....");
 
@@ -44,13 +59,22 @@ void IPCReceiver::run() {
     log_line("[Receiver] Waiting for clients...");
 
     while (running_) {
-        char client_fifo[256] = {0};
+        uint32_t len = 0;
 
-        ssize_t n = read(connect_fd, client_fifo, sizeof(client_fifo));
-        if (n <= 0)
+        if (!read_all(connect_fd, &len, sizeof(len)))
             continue;
 
-        std::string fifo_name(client_fifo);
+        if (len == 0 || len > 256) {
+            log_line("[Receiver] Invalid FIFO name length");
+            continue;
+        }
+
+        std::vector<char> buf(len);
+
+        if (!read_all(connect_fd, buf.data(), len))
+            continue;
+
+        std::string fifo_name(buf.data());
 
         log_line("[Receiver] New client FIFO: " + fifo_name);
 
@@ -159,22 +183,30 @@ bool IPCReceiver::receive(PipeHandle pipe, IPC::Fragment& fragment) {
     return true;
 
 #else
-    ssize_t read_bytes;
     uint32_t packet_size = 0;
 
-    read_bytes = read(pipe, &packet_size, sizeof(packet_size));
-    if (read_bytes <= 0)
+    if (!read_all(pipe, &packet_size, sizeof(packet_size)))
         return false;
 
-    read_bytes = read(pipe, &fragment.header, sizeof(fragment.header));
-    if (read_bytes <= 0)
+    if (packet_size < sizeof(IPC::FragmentHeader) ||
+        packet_size > 10 * 1024 * 1024) {
+        std::cerr << "[ERROR] Invalid packet_size: " << packet_size << std::endl;
         return false;
+    }
+
+    if (!read_all(pipe, &fragment.header, sizeof(fragment.header)))
+        return false;
+
+    if (fragment.header.fragment_size > 10 * 1024 * 1024) {
+        std::cerr << "[ERROR] Invalid fragment_size: "
+                  << fragment.header.fragment_size << std::endl;
+        return false;
+    }
 
     fragment.data.resize(fragment.header.fragment_size);
 
     if (!fragment.data.empty()) {
-        read_bytes = read(pipe, fragment.data.data(), fragment.header.fragment_size);
-        if (read_bytes <= 0)
+        if (!read_all(pipe, fragment.data.data(), fragment.header.fragment_size))
             return false;
     }
 
