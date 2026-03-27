@@ -32,6 +32,8 @@ public:
     
 private:
     bool connect();
+    std::string in_fifo_;
+    std::string out_fifo_;
     // bool send_fragment(IPC::Fragment& fragment);
     // bool send_fragment(const IPC::FragmentView& view);
     // bool wait_for_ack(uint64_t expected_message_id);

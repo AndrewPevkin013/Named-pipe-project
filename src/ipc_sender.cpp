@@ -101,24 +101,35 @@ bool IPCSender::connect() {
         }
     }
 #else
-    std::string client_fifo = "/tmp/ipc_client_" + std::to_string(getpid());
+    in_fifo  = "/tmp/ipc_in_"  + std::to_string(getpid());
+    out_fifo = "/tmp/ipc_out_" + std::to_string(getpid());
 
-    mkfifo(client_fifo.c_str(), 0666);
+    mkfifo(in_fifo.c_str(), 0666);
+    mkfifo(out_fifo.c_str(), 0666);
+
+    std::string payload = in_fifo + "|" + out_fifo;
+
     int connect_fd = open(CONNECT_PIPE, O_WRONLY);
     if (connect_fd < 0) {
         perror("[Client] open connect pipe");
         return false;
     }
 
-    uint32_t len = client_fifo.size() + 1;
+    uint32_t len = payload.size() + 1;
 
     write_all(connect_fd, &len, sizeof(len));
-    write_all(connect_fd, client_fifo.c_str(), len);
+    write_all(connect_fd, payload.c_str(), len);
     close(connect_fd);
 
-    pipe_ = open(client_fifo.c_str(), O_RDWR);
-    if (pipe_ < 0) {
-        perror("[Client] open client fifo");
+    write_fd_ = open(out_fifo.c_str(), O_WRONLY);
+    if (write_fd_ < 0) {
+        perror("open out_fifo");
+        return false;
+    }
+
+    read_fd_ = open(in_fifo.c_str(), O_RDONLY);
+    if (read_fd_ < 0) {
+        perror("open in_fifo");
         return false;
     }
 
@@ -131,7 +142,7 @@ bool IPCSender::send(const std::string& message) {
     if (IPCSender::pipe_ == INVALID_HANDLE_VALUE)
         return false;
 #else
-    if (IPCSender::pipe_ == -1)
+    if (IPCSender::write_fd_ == -1)
         return false;
 #endif
     std::vector<char> body(message.begin(), message.end());
@@ -171,10 +182,6 @@ bool IPCSender::send(const std::string& message) {
 bool IPCSender::send_fragment(const IPC::FragmentView& view) {
 #ifdef _WIN32
     if (pipe_ == INVALID_HANDLE_VALUE) return false;
-#else
-    if (pipe_ == -1) return false;
-#endif
-
     IPC::FragmentHeader header = view.header();
     header.sender_id = client_id_;
 
@@ -190,6 +197,24 @@ bool IPCSender::send_fragment(const IPC::FragmentView& view) {
         if (!write_all(pipe_, view.data(), view.size()))
             return false;
     }
+#else
+    if (write_fd_ == -1) return false;
+    IPC::FragmentHeader header = view.header();
+    header.sender_id = client_id_;
+
+    uint32_t packet_size = sizeof(IPC::FragmentHeader) + static_cast<uint32_t>(view.size());
+
+    if (!write_all(write_fd_, &packet_size, sizeof(packet_size)))
+        return false;
+
+    if (!write_all(write_fd_, &header, sizeof(header)))
+        return false;
+
+    if (view.size() > 0) {
+        if (!write_all(write_fd_, view.data(), view.size()))
+            return false;
+    }
+#endif
 
     return true;
 }
@@ -199,10 +224,10 @@ IPCSender::~IPCSender() {
     if (pipe_ != INVALID_HANDLE_VALUE)
         CloseHandle(pipe_);
 #else
-    if (pipe_ != -1)
-        close(pipe_);
-    std::string client_fifo = "/tmp/ipc_client_" + std::to_string(getpid());
-    unlink(client_fifo.c_str());
+    if (read_fd_ != -1)
+        close(read_fd_);
+    if (write_fd_ != -1)
+        close(write_fd_);
 #endif
 }
 
@@ -235,10 +260,6 @@ IPCSender::~IPCSender() {
 bool IPCSender::wait_for_ack(uint64_t expected_message_id) {
 #ifdef _WIN32
     if (pipe_ == INVALID_HANDLE_VALUE) return false;
-#else
-    if (pipe_ == -1) return false;
-#endif
-
     uint32_t packet_size = 0;
     if (!read_all(pipe_, &packet_size, sizeof(packet_size)))
         return false;
@@ -260,6 +281,30 @@ bool IPCSender::wait_for_ack(uint64_t expected_message_id) {
         std::cerr << "[Client] ACK mismatch\n";
         return false;
     }
+#else
+    if (read_fd_ == -1) return false;
+    uint32_t packet_size = 0;
+    if (!read_all(read_fd_, &packet_size, sizeof(packet_size)))
+        return false;
+
+    IPC::FragmentHeader header{};
+    if (!read_all(read_fd_, &header, sizeof(header)))
+        return false;
+
+    if (!(header.flags & IPC::FLAG_ACK)) {
+        std::cerr << "[Client] Expected ACK\n";
+        return false;
+    }
+
+    IPC::AckPayload payload{};
+    if (!read_all(read_fd_, &payload, sizeof(payload)))
+        return false;
+
+    if (payload.message_id != expected_message_id) {
+        std::cerr << "[Client] ACK mismatch\n";
+        return false;
+    }
+#endif
 
     return true;
 }
@@ -270,7 +315,7 @@ bool IPCSender::send_with_fragment_size(const std::string& message, size_t fragm
     if (IPCSender::pipe_ == INVALID_HANDLE_VALUE)
         return false;
 #else
-    if (IPCSender::pipe_ == -1)
+    if (write_fd_ == -1)
         return false;
 #endif
 

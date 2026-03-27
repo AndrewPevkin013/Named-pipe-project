@@ -74,17 +74,32 @@ void IPCReceiver::run() {
         if (!read_all(connect_fd, buf.data(), len))
             continue;
 
-        std::string fifo_name(buf.data());
+        std::string payload(buf.data());
 
-        log_line("[Receiver] New client FIFO: " + fifo_name);
+        auto pos = payload.find('|');
+        if (pos == std::string::npos) {
+            log_line("[Receiver] Invalid handshake format");
+            continue;
+        }
+        std::string in_fifo  = payload.substr(0, pos);
+        std::string out_fifo = payload.substr(pos + 1);
+        log_line("[Receiver] IN:  " + in_fifo);
+        log_line("[Receiver] OUT: " + out_fifo);
 
-        int client_fd = open(fifo_name.c_str(), O_RDWR);
-        if (client_fd < 0) {
-            perror("open client fifo");
+        int read_fd = open(in_fifo.c_str(), O_RDONLY);
+        if (read_fd < 0) {
+            perror("open in_fifo");
             continue;
         }
 
-        std::thread(&IPCReceiver::client_loop, this, client_fd).detach();
+        int write_fd = open(out_fifo.c_str(), O_WRONLY);
+        if (write_fd < 0) {
+            perror("open out_fifo");
+            close(read_fd);
+            continue;
+        }
+
+        std::thread(&IPCReceiver::client_loop, this, read_fd, write_fd).detach();
     }
 #endif
 }   
@@ -118,14 +133,14 @@ void IPCReceiver::log_line(const std::string& line) {
     }
 }
 
-void IPCReceiver::client_loop(PipeHandle pipe) {
+void IPCReceiver::client_loop(PipeHandle read_fd, PipeHandle write_fd) {
     uint32_t client_id = next_client_id++;
     IPC::MessageAssembler assembler;
     log_line("\n[CONNECT] client_id=" + std::to_string(client_id));
 
     while (running_) {
         IPC::Fragment fragment;
-        if (!receive(pipe, fragment))
+        if (!receive(read_fd, fragment))
             break;
 
         if (assembler.add_fragment(fragment)) {
@@ -145,7 +160,7 @@ void IPCReceiver::client_loop(PipeHandle pipe) {
                     message_handler_(msg);
                 }
 
-                send_ack(pipe, fragment.header.message_id, client_id);
+                send_ack(write_fd, fragment.header.message_id, client_id);
             }
         }
     }
@@ -154,7 +169,8 @@ void IPCReceiver::client_loop(PipeHandle pipe) {
 #ifdef _WIN32
     CloseHandle(pipe);
 #else
-    close(pipe);
+    close(read_fd);
+    close(write_fd);
 #endif
 }
 

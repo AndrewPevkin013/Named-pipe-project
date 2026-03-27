@@ -43,7 +43,7 @@ private:
     void log_line(const std::string& line);
     ServerSendQueue send_queue_;
     std::atomic<bool> running_;
-    void client_loop(PipeHandle pipe);
+    void client_loop(PipeHandle read_fd, PipeHandle write_fd);
     bool receive(PipeHandle pipe, IPC::Fragment& fragment);
     void send_ack(PipeHandle pipe, uint64_t msg_id, uint32_t /*client_id*/);
 
