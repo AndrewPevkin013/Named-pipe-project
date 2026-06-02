@@ -197,9 +197,25 @@ void IPCSender::disconnect() {
         pipe_ = INVALID_HANDLE_VALUE;
     }
 #else
-    if (read_fd_ != -1) close(read_fd_);
-    if (write_fd_ != -1) close(write_fd_);
-    read_fd_ = write_fd_ = -1;
+    if (read_fd_ != -1) {
+        close(read_fd_);
+        read_fd_ = -1;
+    }
+
+    if (write_fd_ != -1) {
+        close(write_fd_);
+        write_fd_ = -1;
+    }
+
+    if (!in_fifo.empty()) {
+        unlink(in_fifo.c_str());
+        in_fifo.clear();
+    }
+
+    if (!out_fifo.empty()) {
+        unlink(out_fifo.c_str());
+        out_fifo.clear();
+    }
 #endif
 }
 
@@ -255,15 +271,7 @@ bool IPCSender::send_fragment(const IPC::FragmentView& view) {
 }
 
 IPCSender::~IPCSender() {
-#ifdef _WIN32
-    if (pipe_ != INVALID_HANDLE_VALUE)
-        CloseHandle(pipe_);
-#else
-    if (read_fd_ != -1)
-        close(read_fd_);
-    if (write_fd_ != -1)
-        close(write_fd_);
-#endif
+    disconnect();
 }
 
 // bool IPCSender::send_fragment(IPC::Fragment& fragment) {

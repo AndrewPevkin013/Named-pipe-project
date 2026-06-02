@@ -2,6 +2,52 @@
 #include <thread>
 std::atomic<uint16_t> IPCReceiver::next_client_id{1};
 
+#ifdef _WIN32
+#include <sddl.h>
+#endif
+
+#ifdef _WIN32
+namespace {
+
+struct PipeSecurity {
+    SECURITY_ATTRIBUTES sa{};
+    PSECURITY_DESCRIPTOR sd = nullptr;
+
+    PipeSecurity() {
+        const char* sddl =
+            "D:"
+            "(A;;GA;;;SY)"
+            "(A;;GA;;;BA)"
+            "(A;;GA;;;OW)";
+
+        if (!ConvertStringSecurityDescriptorToSecurityDescriptorA(
+                sddl,
+                SDDL_REVISION_1,
+                &sd,
+                nullptr)) {
+            sd = nullptr;
+        }
+
+        sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+        sa.lpSecurityDescriptor = sd;
+        sa.bInheritHandle = FALSE;
+    }
+
+    ~PipeSecurity() {
+        if (sd) {
+            LocalFree(sd);
+            sd = nullptr;
+        }
+    }
+
+    SECURITY_ATTRIBUTES* attributes() {
+        return sd ? &sa : nullptr;
+    }
+};
+
+}
+#endif
+
 namespace {
 
 bool read_all(
@@ -48,6 +94,7 @@ void IPCReceiver::run() {
     log_line("[Receiver] Waiting for connections....");
 
 #ifdef _WIN32
+    PipeSecurity pipe_security;
     while (running_) {
         pipe = CreateNamedPipeA(
         PIPE_NAME,
@@ -57,7 +104,7 @@ void IPCReceiver::run() {
         64 * 1024,
         64 * 1024,
         0,
-        nullptr
+        pipe_security.attributes()
     );
 
         if (pipe == INVALID_HANDLE_VALUE)
@@ -142,6 +189,7 @@ void IPCReceiver::run() {
 
 void IPCReceiver::stop() {
     running_ = false;
+
 #ifdef _WIN32
     if (pipe != INVALID_HANDLE_VALUE) {
         CloseHandle(pipe);
@@ -153,6 +201,8 @@ void IPCReceiver::stop() {
         write(fd, "stop", 4);
         close(fd);
     }
+
+    unlink(CONNECT_PIPE);
 #endif
 }
 
