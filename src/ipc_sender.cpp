@@ -8,9 +8,9 @@
 #include <cstring>
 
 #ifdef _WIN32
-    constexpr const char* PIPE_NAME = "\\\\.\\pipe\\IPCTestPipe";
+    const char* PIPE_NAME = "\\\\.\\pipe\\IPCTestPipe";
 #else
-    constexpr const char* CONNECT_PIPE = "/tmp/ipc_transport/ipc_connect";
+    const char* CONNECT_PIPE = "/tmp/ipc_transport/ipc_connect";
 #endif
 
 namespace {
