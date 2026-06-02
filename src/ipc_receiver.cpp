@@ -72,6 +72,7 @@ void IPCReceiver::run() {
     }
 
 #else
+    mkdir("/tmp/ipc_transport", 0700);
     if (mkfifo(CONNECT_PIPE, 0600) < 0 && errno != EEXIST) {
         perror("mkfifo connect");
         return;

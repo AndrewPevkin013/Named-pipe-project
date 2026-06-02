@@ -59,6 +59,6 @@ private:
     PipeHandle pipe = INVALID_HANDLE_VALUE;
 #else
     using PipeHandle = int;
-    constexpr const char* CONNECT_PIPE = "/tmp/ipc_transport/ipc_connect";
+    const char* CONNECT_PIPE = "/tmp/ipc_transport/ipc_connect";
 #endif
 };
