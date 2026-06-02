@@ -16,7 +16,7 @@ size_t MessageFragmenter::calculate_fragment_size(size_t total_message_size) con
     else if (total_message_size <= 10 * 1024 * 1024) {
         return 32 * 1024;
     }
-    else {                                          
+    else {
         return 64 * 1024;
     }
 }
@@ -49,9 +49,24 @@ bool MessageFragmenter::fragment_message_stream(const std::vector<char>& message
     return fragment_message_stream_with_size(message_data, fragment_size, std::move(callback));
 }
 
+uint32_t crc32(const char* data, size_t size) {
+    uint32_t crc = 0xFFFFFFFFu;
+
+    for (size_t i = 0; i < size; ++i) {
+        crc ^= static_cast<unsigned char>(data[i]);
+
+        for (int j = 0; j < 8; ++j) {
+            uint32_t mask = -(crc & 1u);
+            crc = (crc >> 1) ^ (0xEDB88320u & mask);
+        }
+    }
+
+    return ~crc;
+}
+
 bool MessageFragmenter::fragment_message_stream_with_size(const std::vector<char>& message_data, size_t fragment_size, FragmentCallback callback) {
     fragment_size = std::clamp(fragment_size, MIN_FRAGMENT_SIZE, MAX_FRAGMENT_SIZE);
-
+    uint32_t checksum = crc32(message_data.data(), message_data.size());
     uint64_t message_id = next_message_id_++;
     size_t total_size = message_data.size();
     size_t total_fragments = (total_size + fragment_size - 1) / fragment_size;
@@ -63,6 +78,7 @@ bool MessageFragmenter::fragment_message_stream_with_size(const std::vector<char
     base_header.fragment_size = 0; 
     base_header.fragment_index = 0;
     base_header.total_fragments = static_cast<uint32_t>(total_fragments);
+    base_header.message_checksum = checksum;
     base_header.flags = FLAG_DATA;
     
     for (size_t i = 0; i < total_fragments; ++i) {
@@ -85,7 +101,7 @@ bool MessageFragmenter::fragment_message_stream_with_size(const std::vector<char
 }
 
 
-void MessageFragmenter::fill_fragment(Fragment& f, uint64_t message_id, size_t total_size, size_t fragment_size, size_t fragment_index, size_t total_fragments, const std::vector<char>& message_data) {
+void MessageFragmenter::fill_fragment(Fragment& f, uint32_t message_id, size_t total_size, size_t fragment_size, size_t fragment_index, size_t total_fragments, const std::vector<char>& message_data) {
     size_t offset = fragment_index * fragment_size;
     size_t size = std::min(fragment_size, total_size - offset);
     
@@ -94,6 +110,7 @@ void MessageFragmenter::fill_fragment(Fragment& f, uint64_t message_id, size_t t
     f.header.fragment_size = static_cast<uint32_t>(size);
     f.header.fragment_index = static_cast<uint32_t>(fragment_index);
     f.header.total_fragments = static_cast<uint32_t>(total_fragments);
+    f.header.message_checksum = crc32(message_data.data(), message_data.size());
     f.header.flags = (fragment_index + 1 == total_fragments) ? FLAG_LAST : FLAG_DATA;
     
     f.data.clear();

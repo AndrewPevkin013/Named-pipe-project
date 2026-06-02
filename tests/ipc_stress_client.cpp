@@ -25,11 +25,9 @@
     #include <unistd.h>
 #endif
 
-// TODO: исправить момент на принимающей стороне: во время тестов сообщения выводиться не должны!
-
 using namespace TestConfig;
 
-const int REPETITIONS = 3;
+const int REPETITIONS = 1;
 
 const std::vector<size_t> FRAGMENT_SIZES = {
     16 * 1024,
@@ -107,6 +105,23 @@ struct DetailedRunResult {
     double memory_delta_mb;
 };
 
+// void run_client_thread(int client_id, size_t msg_size, int msg_cnt, size_t fragment_size)
+// {
+//     IPCSender sender;
+
+//     for (int m = 0; m < msg_cnt; ++m) {
+//         std::string msg = generate_fixed_message(msg_size);
+//         std::vector<char> data(msg.begin(), msg.end());
+
+//         sender.get_fragmenter().fragment_message_stream_with_size(
+//             data,
+//             fragment_size,
+//             [&](const IPC::FragmentView& view) {
+//                 return sender.send_fragment(view);
+//             });
+//     }
+// }
+
 int main() {
     std::filesystem::create_directories(LOG_DIR);
 
@@ -139,6 +154,14 @@ int main() {
     for (size_t msg_size : MESSAGE_SIZES) {
         for (int msg_cnt : MESSAGE_COUNTS) {
             for (size_t fsize : FRAGMENT_SIZES) {
+                // std::vector<std::thread> clients;
+
+                // for (int i = 0; i < CLIENT_COUNT; ++i) {
+                //     clients.emplace_back(run_client_thread, i, msg_size, msg_cnt, fsize);
+                // }
+
+                // for (auto& t : clients)
+                //     t.join();
 
                 if (fsize > msg_size && msg_size < 1024 * 1024)
                     continue;

@@ -2,11 +2,7 @@
 
 namespace {
 
-bool write_all(
-    PipeHandle pipe,
-    const void* data,
-    size_t size
-) {
+bool write_all(PipeHandle pipe, const void* data, size_t size) {
     size_t total = 0;
     const char* buf = static_cast<const char*>(data);
 
@@ -58,9 +54,7 @@ bool ServerSendQueue::write_fragment(PipeHandle pipe, const IPC::Fragment& fragm
     if (pipe == -1) return false;
 #endif
 
-    uint32_t packet_size =
-        sizeof(IPC::FragmentHeader) +
-        static_cast<uint32_t>(fragment.data.size());
+    uint32_t packet_size = sizeof(IPC::FragmentHeader) + static_cast<uint32_t>(fragment.data.size());
 
     if (!write_all(pipe, &packet_size, sizeof(packet_size)))
         return false;
@@ -87,7 +81,7 @@ void ServerSendQueue::push_immediate(PipeHandle pipe, const IPC::Fragment& fragm
         return;
     }
 
-    std::cout << "[ACK SENT] msg_id=" << fragment.header.message_id << "\n";
+    // std::cout << "[ACK SENT] msg_id=" << fragment.header.message_id << "\n";
 }
 
 

@@ -14,14 +14,15 @@ namespace IPC {
     #pragma pack(push, 1)
 
     struct FragmentHeader {
-        uint32_t sender_id;
-        uint64_t message_id;
+        uint16_t sender_id;
+        uint32_t message_id;
         uint32_t total_size;
         uint32_t fragment_size;
         uint32_t fragment_index;
         uint32_t total_fragments;
+        uint32_t message_checksum;
         uint8_t flags;
-        uint8_t reserved[15];
+        uint8_t reserved[7];
 
         void set_last(bool last) {
             if (last) flags |= 0x01;
@@ -32,12 +33,13 @@ namespace IPC {
     enum FragmentFlags : uint8_t {
         FLAG_DATA = 0x00,
         FLAG_LAST = 0x01,
-        FLAG_ACK  = 0x02
+        FLAG_ACK  = 0x02,
+        FLAG_NACK = 0x04
     };
     
     constexpr size_t MIN_FRAGMENT_SIZE = 1;
     // constexpr size_t MAX_FRAGMENT_SIZE = 64 * 1024;
-    constexpr size_t MAX_FRAGMENT_SIZE = 50 * 1024 * 1024; // изменил порог для проверки передачи фрагментов по 50 МБ (для тестов)
+    constexpr size_t MAX_FRAGMENT_SIZE = 100 * 1024 * 1024; // изменил порог для проверки передачи фрагментов по 50 МБ (для тестов)
     constexpr size_t HEADER_SIZE = sizeof(FragmentHeader);
     static_assert(sizeof(FragmentHeader) == HEADER_SIZE, "FragmentHeader size mismatch");
 
@@ -49,7 +51,7 @@ namespace IPC {
     #pragma pack(pop)
 
     struct AckPayload {
-        uint64_t message_id;
+        uint32_t message_id;
     };
 
     class FragmentView {
@@ -88,21 +90,21 @@ namespace IPC {
     
     private:
         size_t calculate_fragment_size(size_t total_message_size) const;
-        void fill_fragment(Fragment& f, uint64_t message_id, size_t total_size, size_t fragment_size, size_t fragment_index, size_t total_fragments, const std::vector<char>& message_data);
-        std::atomic<uint64_t> next_message_id_;
+        void fill_fragment(Fragment& f, uint32_t message_id, size_t total_size, size_t fragment_size, size_t fragment_index, size_t total_fragments, const std::vector<char>& message_data);
+        std::atomic<uint32_t> next_message_id_;
     };
 
     class MessageAssembler {
     public:
         struct AssembledMessage {
-            uint64_t message_id;
+            uint32_t message_id;
             std::vector<char> data;
             bool complete = false;
         };
 
         struct MessageKey {
-            uint32_t sender_id;
-            uint64_t message_id;
+            uint16_t sender_id;
+            uint32_t message_id;
 
             bool operator<(const MessageKey& other) const {
                 if (sender_id != other.sender_id)
@@ -112,13 +114,14 @@ namespace IPC {
         };
         
         bool add_fragment(const Fragment& fragment);
-        AssembledMessage get_assembled_message(uint32_t sender_id, uint64_t message_id);
+        AssembledMessage get_assembled_message(uint16_t sender_id, uint32_t message_id);
     
     private:
         struct AssemblyState {
             uint64_t message_id;
             uint32_t total_size;
             uint32_t total_fragments;
+            uint32_t message_checksum = 0;
             std::vector<std::vector<char>> fragments;
             std::vector<bool> received;
             uint32_t received_count = 0;

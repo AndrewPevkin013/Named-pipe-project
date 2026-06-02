@@ -10,7 +10,7 @@ int main() {
         std::cout << "Received message:\n";
         std::cout << "ID: " << msg.message_id << std::endl;
         std::cout << "Size: " << msg.data.size() << std::endl;
-        std::cout << "Content: " << text << std::endl;
+        // std::cout << "Content: " << text << std::endl;
     });
 
     server.run();
