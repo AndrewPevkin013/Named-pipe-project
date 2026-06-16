@@ -28,9 +28,21 @@ std::vector<Fragment> MessageFragmenter::fragment_message(const std::vector<char
 
 std::vector<Fragment> MessageFragmenter::fragment_message_with_size(const std::vector<char>& message_data, size_t fragment_size) {
     fragment_size = std::clamp(fragment_size, MIN_FRAGMENT_SIZE, MAX_FRAGMENT_SIZE);
-
-    uint64_t message_id = next_message_id_++;
+    uint32_t message_id = next_message_id_++;
     size_t total_size = message_data.size();
+    if (total_size == 0) {
+        Fragment f{};
+        f.header.sender_id = 0;
+        f.header.message_id = message_id;
+        f.header.total_size = 0;
+        f.header.fragment_size = 0;
+        f.header.fragment_index = 0;
+        f.header.total_fragments = 1;
+        f.header.message_checksum = 0;
+        f.header.flags = FLAG_DATA | FLAG_LAST;
+        return { std::move(f) };
+    }
+    
     size_t total_fragments = (total_size + fragment_size - 1) / fragment_size;
     std::vector<Fragment> fragments;
     fragments.reserve(total_fragments);
@@ -56,7 +68,7 @@ uint32_t crc32(const char* data, size_t size) {
         crc ^= static_cast<unsigned char>(data[i]);
 
         for (int j = 0; j < 8; ++j) {
-            uint32_t mask = -(crc & 1u);
+            uint32_t mask = (crc & 1u) ? 0xFFFFFFFFu : 0u;
             crc = (crc >> 1) ^ (0xEDB88320u & mask);
         }
     }
@@ -66,8 +78,27 @@ uint32_t crc32(const char* data, size_t size) {
 
 bool MessageFragmenter::fragment_message_stream_with_size(const std::vector<char>& message_data, size_t fragment_size, FragmentCallback callback) {
     fragment_size = std::clamp(fragment_size, MIN_FRAGMENT_SIZE, MAX_FRAGMENT_SIZE);
-    uint32_t checksum = crc32(message_data.data(), message_data.size());
-    uint64_t message_id = next_message_id_++;
+    if (message_data.empty()) {
+        FragmentHeader header{};
+        header.sender_id = 0;
+        header.message_id = next_message_id_++;
+        header.total_size = 0;
+        header.fragment_size = 0;
+        header.fragment_index = 0;
+        header.total_fragments = 1;
+        header.message_checksum = 0;
+        header.flags = FLAG_DATA | FLAG_LAST;
+
+        FragmentView view(header, nullptr, 0);
+        return callback(view);
+    }
+
+    uint32_t checksum = 0;
+
+    if (!message_data.empty()) {
+        checksum = crc32(message_data.data(), message_data.size());
+    }    
+    uint32_t message_id = next_message_id_++;
     size_t total_size = message_data.size();
     size_t total_fragments = (total_size + fragment_size - 1) / fragment_size;
     
@@ -110,7 +141,12 @@ void MessageFragmenter::fill_fragment(Fragment& f, uint32_t message_id, size_t t
     f.header.fragment_size = static_cast<uint32_t>(size);
     f.header.fragment_index = static_cast<uint32_t>(fragment_index);
     f.header.total_fragments = static_cast<uint32_t>(total_fragments);
-    f.header.message_checksum = crc32(message_data.data(), message_data.size());
+    f.header.message_checksum = 0;
+
+    if (!message_data.empty()) {
+        f.header.message_checksum =
+            crc32(message_data.data(), message_data.size());
+    }
     f.header.flags = (fragment_index + 1 == total_fragments) ? FLAG_LAST : FLAG_DATA;
     
     f.data.clear();

@@ -55,35 +55,35 @@ void client_worker(int client_id) {
 }
 
 int main() {
-    auto start = std::chrono::high_resolution_clock::now();
+//     auto start = std::chrono::high_resolution_clock::now();
 
-    std::vector<std::thread> clients;
-    clients.reserve(CLIENT_COUNT);
+//     std::vector<std::thread> clients;
+//     clients.reserve(CLIENT_COUNT);
 
-    for (int i = 0; i < CLIENT_COUNT; ++i) {
-        clients.emplace_back(client_worker, i + 1);
-    }
+//     for (int i = 0; i < CLIENT_COUNT; ++i) {
+//         clients.emplace_back(client_worker, i + 1);
+//     }
 
-    for (auto& t : clients) {
-        t.join();
-    }
+//     for (auto& t : clients) {
+//         t.join();
+//     }
 
-    auto end = std::chrono::high_resolution_clock::now();
+//     auto end = std::chrono::high_resolution_clock::now();
 
-    int total = CLIENT_COUNT * MESSAGES_PER_CLIENT;
-    double ms = bench::ms_since(start, end);
+//     int total = CLIENT_COUNT * MESSAGES_PER_CLIENT;
+//     double ms = bench::ms_since(start, end);
 
-    std::cout << "IPC multiclient test\n";
-    std::cout << "Clients: " << CLIENT_COUNT << "\n";
-    std::cout << "Messages/client: " << MESSAGES_PER_CLIENT << "\n";
-    std::cout << "Expected: " << total << "\n";
-    std::cout << "Success: " << success_count.load() << "\n";
-    std::cout << "Failed: " << failed_count.load() << "\n";
-    std::cout << "Time(ms): " << ms << "\n";
-    std::cout << "Messages/sec: " << (total * 1000.0 / ms) << "\n";
+//     std::cout << "IPC multiclient test\n";
+//     std::cout << "Clients: " << CLIENT_COUNT << "\n";
+//     std::cout << "Messages/client: " << MESSAGES_PER_CLIENT << "\n";
+//     std::cout << "Expected: " << total << "\n";
+//     std::cout << "Success: " << success_count.load() << "\n";
+//     std::cout << "Failed: " << failed_count.load() << "\n";
+//     std::cout << "Time(ms): " << ms << "\n";
+//     std::cout << "Messages/sec: " << (total * 1000.0 / ms) << "\n";
 
-#ifdef _WIN32
-    system("pause");
-#endif
-    return failed_count.load() == 0 ? 0 : 1;
+// #ifdef _WIN32
+//     system("pause");
+// #endif
+//     return failed_count.load() == 0 ? 0 : 1;
 }

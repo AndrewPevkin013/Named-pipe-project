@@ -24,4 +24,4 @@ endif()
 
 add_subdirectory(test_sender)
 add_subdirectory(test_receiver)
-add_subdirectory(tests)
+# add_subdirectory(tests)

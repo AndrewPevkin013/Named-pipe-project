@@ -7,11 +7,6 @@
 #include <optional>
 #include <cstring>
 
-#ifdef _WIN32
-    const char* PIPE_NAME = "\\\\.\\pipe\\IPCTestPipe";
-#else
-    const char* CONNECT_PIPE = "/tmp/ipc_transport/ipc_connect";
-#endif
 
 namespace {
     bool write_all(
@@ -73,16 +68,19 @@ namespace {
 
 std::atomic<uint32_t> IPCSender::next_sender_id_{1};
 
-IPCSender::IPCSender(uint32_t client_id) {
-    client_id_ = client_id == 0 ? next_sender_id_++ : client_id;
-    connect();
+std::string IPCSender::get_connect_pipe_name() const
+{
+    return "/tmp/ipc_transport/" + channel_name_ + "_connect";
 }
 
-bool IPCSender::connect() {
+bool IPCSender::connect()
+{
 #ifdef _WIN32
-    while (true) {
+    std::string pipe_name = make_pipe_name(channel_name_);
+
+    for (int attempt = 0; attempt < 20; ++attempt) {
         pipe_ = CreateFileA(
-            PIPE_NAME,
+            pipe_name.c_str(),
             GENERIC_READ | GENERIC_WRITE,
             0,
             nullptr,
@@ -94,16 +92,19 @@ bool IPCSender::connect() {
         if (pipe_ != INVALID_HANDLE_VALUE)
             return true;
 
-        if (GetLastError() != ERROR_PIPE_BUSY) {
-            std::cerr << "[Client] Failed to connect to pipe\n";
-            return false;
+        DWORD err = GetLastError();
+
+        if (err == ERROR_FILE_NOT_FOUND || err == ERROR_PIPE_BUSY) {
+            WaitNamedPipeA(pipe_name.c_str(), 500);
+            Sleep(250);
+            continue;
         }
 
-        if (!WaitNamedPipeA(PIPE_NAME, 5000)) {
-            std::cerr << "[Client] Pipe wait timeout\n";
-            return false;
-        }
+        std::cerr << "[Client] Failed to connect to pipe. err=" << err << "\n";
+        return false;
     }
+
+    return false;
 #else
     static std::atomic<uint64_t> counter{0};
 
@@ -117,7 +118,7 @@ bool IPCSender::connect() {
 
     std::string payload = in_fifo + "|" + out_fifo;
 
-    int connect_fd = open(CONNECT_PIPE, O_WRONLY);
+    int connect_fd = open(get_connect_pipe_name().c_str(), O_WRONLY);
     if (connect_fd < 0) {
         perror("[Client] open connect pipe");
         return false;
@@ -128,8 +129,6 @@ bool IPCSender::connect() {
     memcpy(handshake.data(), &len, sizeof(len));
     memcpy(handshake.data() + sizeof(len), payload.c_str(), len);
     write_all(connect_fd, handshake.data(), handshake.size());
-    // write_all(connect_fd, &len, sizeof(len));
-    // write_all(connect_fd, payload.c_str(), len);
     close(connect_fd);
 
     write_fd_ = open(out_fifo.c_str(), O_WRONLY);
@@ -148,47 +147,71 @@ bool IPCSender::connect() {
 #endif
 }
 
-bool IPCSender::send(const std::string& message) {
-#ifdef _WIN32
-    if (IPCSender::pipe_ == INVALID_HANDLE_VALUE)
-        return false;
-#else
-    if (write_fd_ == -1)
-        return false;
-#endif
+bool IPCSender::send(const std::vector<uint8_t>& data)
+{
+// #ifdef _WIN32
+//     if (pipe_ == INVALID_HANDLE_VALUE)
+//         return false;
+// #else
+//     if (write_fd_ == -1)
+//         return false;
+// #endif
+
     std::lock_guard<std::mutex> lock(send_mutex_);
-    std::vector<char> body(message.begin(), message.end());
 
-    auto now = std::chrono::system_clock::now();
-    auto time_t_now = std::chrono::system_clock::to_time_t(now);
-    std::tm tm_now = *std::localtime(&time_t_now);
+    if (!ensure_connected())
+        return false;
 
-    std::ostringstream meta;
-    meta << "type:text\n"
-         << "size:" << body.size() << "\n"
-         << "timestamp:" << std::put_time(&tm_now, "%Y-%m-%d %H:%M:%S") << "\n";
-
-    std::string metadata = meta.str();
-
-    std::vector<char> full_message;
-    full_message.insert(full_message.end(), metadata.begin(), metadata.end());
-    full_message.insert(full_message.end(), body.begin(), body.end());
-
+    std::vector<char> payload(data.begin(), data.end());
     std::optional<uint32_t> message_id;
-        bool success = fragmenter_.fragment_message_stream(full_message,
-        [this, &message_id](const IPC::FragmentView& view) -> bool {
-            if (!message_id) {
+
+    bool success = fragmenter_.fragment_message_stream(
+        payload,
+        [this, &message_id](const IPC::FragmentView& view) -> bool
+        {
+            if (!message_id)
                 message_id = view.header().message_id;
-            }
+
             return send_fragment(view);
-        });
-    
+        }
+    );
+
     if (!success || !message_id) {
+        mark_disconnected();
         return false;
     }
-    return wait_for_ack(*message_id);
+
+    if (!wait_for_ack(*message_id)) {
+        mark_disconnected();
+        return false;
+    }
+
+    return true;
 }
 
+IPCSender::IPCSender(const std::string& channel_name, uint16_t client_id) : channel_name_(channel_name)
+{
+    client_id_ = client_id == 0 ? next_sender_id_++ : client_id;
+    // connect();
+}
+
+bool IPCSender::ensure_connected()
+{
+#ifdef _WIN32
+    if (pipe_ != INVALID_HANDLE_VALUE)
+        return true;
+#else
+    if (write_fd_ != -1 && read_fd_ != -1)
+        return true;
+#endif
+
+    return connect();
+}
+
+void IPCSender::mark_disconnected()
+{
+    disconnect();
+}
 
 void IPCSender::disconnect() {
 #ifdef _WIN32
@@ -226,24 +249,6 @@ bool IPCSender::send_fragment(const IPC::FragmentView& view) {
     if (write_fd_ == -1) return false;
 #endif
 
-    // IPC::FragmentHeader header = view.header();
-    // header.sender_id = client_id_;
-
-    // uint32_t packet_size = sizeof(IPC::FragmentHeader) + static_cast<uint32_t>(view.size());
-    // DWORD written = 0;
-
-    // if (!WriteFile(pipe_, &packet_size, sizeof(packet_size), &written, nullptr))
-    //     return false;
-
-    // if (!WriteFile(pipe_, &header, sizeof(header), &written, nullptr))
-    //     return false;
-
-    // if (view.size() > 0) {
-    //     if (!WriteFile(pipe_, view.data(), static_cast<DWORD>(view.size()), &written, nullptr))
-    //         return false;
-    // }
-
-    // return true;
     IPC::FragmentHeader header = view.header();
     header.sender_id = client_id_;
 
@@ -273,32 +278,6 @@ bool IPCSender::send_fragment(const IPC::FragmentView& view) {
 IPCSender::~IPCSender() {
     disconnect();
 }
-
-// bool IPCSender::send_fragment(IPC::Fragment& fragment) {
-// #ifdef _WIN32
-//     if (pipe_ == INVALID_HANDLE_VALUE)
-//         return false;
-
-//     fragment.header.sender_id = client_id_;
-
-//     uint32_t packet_size = sizeof(IPC::FragmentHeader) + static_cast<uint32_t>(fragment.data.size());
-//     DWORD written = 0;
-
-//     if (!WriteFile(pipe_, &packet_size, sizeof(packet_size), &written, nullptr))
-//         return false;
-
-//     if (!WriteFile(pipe_, &fragment.header, sizeof(fragment.header), &written, nullptr))
-//         return false;
-
-//     if (!fragment.data.empty()) {
-//         if (!WriteFile(pipe_, fragment.data.data(), static_cast<DWORD>(fragment.data.size()), &written, nullptr))
-//             return false;
-//     }
-
-//     return true;
-// #endif
-//     return false;
-// }
 
 bool IPCSender::wait_for_ack(uint32_t expected_message_id) {
 

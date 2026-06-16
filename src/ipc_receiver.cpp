@@ -90,22 +90,29 @@ bool read_all(
 
 }
 
+IPCReceiver::IPCReceiver(const std::string& channel_name) : channel_name_(channel_name), running_(true)
+{
+    std::filesystem::create_directories(SERVER_LOG_DIR);
+    server_log.open(SERVER_LOG_FILE, std::ios::out | std::ios::trunc);
+}
+
 void IPCReceiver::run() {
     log_line("[Receiver] Waiting for connections....");
 
 #ifdef _WIN32
     PipeSecurity pipe_security;
     while (running_) {
+        std::string pipe_name = make_pipe_name(channel_name_);
         pipe = CreateNamedPipeA(
-        PIPE_NAME,
-        PIPE_ACCESS_DUPLEX,
-        PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
-        PIPE_UNLIMITED_INSTANCES,
-        64 * 1024,
-        64 * 1024,
-        0,
-        pipe_security.attributes()
-    );
+            pipe_name.c_str(),
+            PIPE_ACCESS_DUPLEX,
+            PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
+            PIPE_UNLIMITED_INSTANCES,
+            64 * 1024,
+            64 * 1024,
+            0,
+            pipe_security.attributes()
+        );
 
         if (pipe == INVALID_HANDLE_VALUE)
             continue;
@@ -120,75 +127,76 @@ void IPCReceiver::run() {
 
 #else
     mkdir("/tmp/ipc_transport", 0700);
-    if (mkfifo(CONNECT_PIPE, 0600) < 0 && errno != EEXIST) {
+    std::string connect_pipe = get_connect_pipe_name();
+    if (mkfifo(connect_pipe.c_str(), 0600) < 0 && errno != EEXIST) {
         perror("mkfifo connect");
         return;
     }
 
-    int connect_fd = open(CONNECT_PIPE, O_RDONLY);
-    if (connect_fd < 0) {
-        perror("open connect");
-        return;
-    }
-
-    log_line("[Receiver] Waiting for clients...");
-
     while (running_) {
-        uint32_t len = 0;
-        if (!read_all(connect_fd, &len, sizeof(len))) {
-            if (!running_) break;
+        int connect_fd = open(connect_pipe.c_str(), O_RDONLY);
+        if (connect_fd < 0) {
+            if (!running_)
+                break;
+
+            perror("open connect");
             continue;
         }
 
-        // if (!read_all(connect_fd, &len, sizeof(len)))
-        //     continue;
+        log_line("[Receiver] Waiting for clients...");
+        while (running_) {
+            uint32_t len = 0;
+            if (!read_all(connect_fd, &len, sizeof(len))) {
+                close(connect_fd);
+                break;
+            }
 
-        if (len == 0 || len > 256) {
-            log_line("[Receiver] Invalid FIFO name length");
-            continue;
+            if (len == 0 || len > 256) {
+                log_line("[Receiver] Invalid FIFO name length");
+                continue;
+            }
+
+            std::vector<char> buf(len);
+
+            if (!read_all(connect_fd, buf.data(), len))
+                continue;
+
+            std::string payload(buf.data());
+
+            auto pos = payload.find('|');
+            if (pos == std::string::npos) {
+                log_line("[Receiver] Invalid handshake format");
+                continue;
+            }
+            std::string in_fifo  = payload.substr(0, pos);
+            std::string out_fifo = payload.substr(pos + 1);
+
+            int read_fd = open(out_fifo.c_str(), O_RDONLY);
+            if (read_fd < 0) {
+                perror("open in_fifo");
+                continue;
+            }
+            
+            int write_fd = open(in_fifo.c_str(), O_WRONLY);
+            if (write_fd < 0) {
+                perror("open out_fifo");
+                close(read_fd);
+                continue;
+            }
+
+            std::thread(&IPCReceiver::client_loop_linux, this, read_fd, write_fd).detach();
         }
-
-        std::vector<char> buf(len);
-
-        if (!read_all(connect_fd, buf.data(), len))
-            continue;
-
-        std::string payload(buf.data());
-
-        auto pos = payload.find('|');
-        if (pos == std::string::npos) {
-            log_line("[Receiver] Invalid handshake format");
-            continue;
-        }
-        std::string in_fifo  = payload.substr(0, pos);
-        std::string out_fifo = payload.substr(pos + 1);
-        log_line("[Receiver] IN:  " + in_fifo);
-        log_line("[Receiver] OUT: " + out_fifo);
-
-        int read_fd = open(out_fifo.c_str(), O_RDONLY);
-        if (read_fd < 0) {
-            perror("open in_fifo");
-            continue;
-        }
-        
-        int write_fd = open(in_fifo.c_str(), O_WRONLY);
-        if (write_fd < 0) {
-            perror("open out_fifo");
-            close(read_fd);
-            continue;
-        }
-
-        std::thread(&IPCReceiver::client_loop_linux, this, read_fd, write_fd).detach();
     }
 #endif
 }   
 
-// void IPCReceiver::set_message_handler(MessageHandler handler) {
-//     message_handler_ = std::move(handler);
-// }
 
-void IPCReceiver::stop() {
-    running_ = false;
+void IPCReceiver::stop()
+{
+    bool expected = true;
+
+    if (!running_.compare_exchange_strong(expected, false))
+        return;
 
 #ifdef _WIN32
     if (pipe != INVALID_HANDLE_VALUE) {
@@ -196,13 +204,15 @@ void IPCReceiver::stop() {
         pipe = INVALID_HANDLE_VALUE;
     }
 #else
-    int fd = open(CONNECT_PIPE, O_WRONLY | O_NONBLOCK);
+    const std::string connect_pipe = get_connect_pipe_name();
+
+    int fd = open(connect_pipe.c_str(), O_WRONLY | O_NONBLOCK);
     if (fd >= 0) {
         write(fd, "stop", 4);
         close(fd);
     }
 
-    unlink(CONNECT_PIPE);
+    unlink(connect_pipe.c_str());
 #endif
 }
 
@@ -220,19 +230,16 @@ void IPCReceiver::set_message_handler(MessageHandler handler) {
     subscribe("default", std::move(handler));
 }
 
-IPCReceiver::IPCReceiver() : running_(true) {
-    std::filesystem::create_directories(SERVER_LOG_DIR);
-    server_log.open(SERVER_LOG_FILE, std::ios::out | std::ios::trunc);
 
-    if (!server_log) {
-        std::cerr << "[Server] Failed to open log file\n";
-    }
-}
+IPCReceiver::~IPCReceiver()
+{
+    stop();
 
-IPCReceiver::~IPCReceiver() {
 #ifdef _WIN32
-    if (pipe != INVALID_HANDLE_VALUE)
+    if (pipe != INVALID_HANDLE_VALUE) {
         CloseHandle(pipe);
+        pipe = INVALID_HANDLE_VALUE;
+    }
 #endif
 }
 
@@ -264,24 +271,21 @@ void IPCReceiver::client_loop(PipeHandle pipe) {
             );
 
             if (msg.complete) {
-                std::string channel = (msg.data.empty() || msg.data[0] == '{') ? "storage_inbox" : "videodata_inbox";
                 std::lock_guard<std::mutex> lock(handlers_mutex_);
-                auto it = handlers_.find(channel);
+                auto it = handlers_.find(channel_name_);
                 if (it != handlers_.end()) {
                     it->second(msg);
                 } else {
                     auto def = handlers_.find("default");
-                    if (def != handlers_.end()) def->second(msg);
+                    if (def != handlers_.end()) {
+                        def->second(msg);
+                    }
                 }
                 log_line(
                     "[RECEIVED] client=" + std::to_string(client_id) +
                     " msg_id=" + std::to_string(fragment.header.message_id) +
                     " size=" + std::to_string(msg.data.size())
                 );
-
-                // if (message_handler_) {
-                //     message_handler_(msg);
-                // }
 
                 send_ack(pipe, fragment.header.message_id, client_id);
             }
@@ -308,14 +312,15 @@ void IPCReceiver::client_loop_linux(PipeHandle read_fd, PipeHandle write_fd) {
             );
 
             if (msg.complete) {
-                std::string channel = (msg.data.empty() || msg.data[0] == '{') ? "storage_inbox" : "videodata_inbox";
                 std::lock_guard<std::mutex> lock(handlers_mutex_);
-                auto it = handlers_.find(channel);
+                auto it = handlers_.find(channel_name_);
                 if (it != handlers_.end()) {
                     it->second(msg);
                 } else {
                     auto def = handlers_.find("default");
-                    if (def != handlers_.end()) def->second(msg);
+                    if (def != handlers_.end()) {
+                        def->second(msg);
+                    }
                 }
                 log_line(
                     "[RECEIVED] client=" + std::to_string(client_id) +
@@ -323,9 +328,6 @@ void IPCReceiver::client_loop_linux(PipeHandle read_fd, PipeHandle write_fd) {
                     " size=" + std::to_string(msg.data.size())
                 );
 
-                // if (message_handler_) {
-                //     message_handler_(msg);
-                // }
 
                 send_ack(write_fd, fragment.header.message_id, client_id);
             }
@@ -338,67 +340,11 @@ void IPCReceiver::client_loop_linux(PipeHandle read_fd, PipeHandle write_fd) {
 #endif
 }
 
-// bool IPCReceiver::receive(PipeHandle pipe, IPC::Fragment& fragment) {
-// #ifdef _WIN32
-//     DWORD read = 0;
-//     uint32_t packet_size = 0;
+std::string IPCReceiver::get_connect_pipe_name() const
+{
+    return "/tmp/ipc_transport/" + channel_name_ + "_connect";
+}
 
-//     if (!ReadFile(pipe, &packet_size, sizeof(packet_size), &read, nullptr))
-//         return false;
-
-//     if (!ReadFile(pipe, &fragment.header, sizeof(fragment.header), &read, nullptr))
-//         return false;
-
-//     fragment.data.resize(fragment.header.fragment_size);
-//     if (!fragment.data.empty()) {
-//         if (!ReadFile(
-//                 pipe,
-//                 fragment.data.data(),
-//                 fragment.header.fragment_size,
-//                 &read,
-//                 nullptr))
-//             return false;
-//     }
-
-//     return true;
-
-// #else
-//     uint32_t packet_size = 0;
-
-//     if (!read_all(pipe, &packet_size, sizeof(packet_size)))
-//         return false;
-
-//     if (packet_size < sizeof(IPC::FragmentHeader) ||
-//         packet_size > sizeof(IPC::FragmentHeader) + IPC::MAX_FRAGMENT_SIZE) {
-//         std::cerr << "[ERROR] Invalid packet_size: " << packet_size << std::endl;
-//         return false;
-//     }
-
-//     if (!read_all(pipe, &fragment.header, sizeof(fragment.header)))
-//         return false;
-
-//     if (fragment.header.fragment_size > IPC::MAX_FRAGMENT_SIZE) {
-//         std::cerr << "[ERROR] Invalid fragment_size: "
-//                   << fragment.header.fragment_size << std::endl;
-//         return false;
-//     }
-//     uint32_t expected_packet_size = static_cast<uint32_t>(sizeof(IPC::FragmentHeader) + fragment.header.fragment_size);
-
-//     if (packet_size != expected_packet_size) {
-//         std::cerr << "[ERROR] Packet size mismatch\n";
-//         return false;
-//     }
-
-//     fragment.data.resize(fragment.header.fragment_size);
-
-//     if (!fragment.data.empty()) {
-//         if (!read_all(pipe, fragment.data.data(), fragment.header.fragment_size))
-//             return false;
-//     }
-
-//     return true;
-// #endif
-// }
 
 bool IPCReceiver::receive(PipeHandle pipe, IPC::Fragment& fragment) {
     uint32_t packet_size = 0;

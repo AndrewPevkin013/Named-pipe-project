@@ -2,6 +2,7 @@
 
 #include "server_send_queue.hpp"
 #include "ipc_protocol.hpp"
+#include "ipc_transport_utils.hpp"
 
 #include <atomic>
 #include <thread>
@@ -24,12 +25,13 @@
 
 class IPCReceiver {
 public:
-    IPCReceiver();
     ~IPCReceiver();
+    explicit IPCReceiver(const std::string& channel_name);
 
     static std::atomic<uint16_t> next_client_id;
     const char* SERVER_LOG_DIR  = "logs";
     const char* SERVER_LOG_FILE = "logs/server.log";
+    std::string channel_name_;
     std::mutex log_mutex;
     std::ofstream server_log;
     void run();
@@ -40,6 +42,7 @@ public:
     void stop();
     void subscribe(const std::string& channel_name, MessageHandler handler);
     void unsubscribe(const std::string& channel_name);
+    std::string get_connect_pipe_name() const;
 
 private:
     MessageHandler message_handler_;

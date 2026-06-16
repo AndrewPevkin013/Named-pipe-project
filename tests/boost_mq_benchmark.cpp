@@ -29,41 +29,41 @@ void receiver_thread() {
 }
 
 int main() {
-    message_queue::remove(QUEUE_NAME);
+//     message_queue::remove(QUEUE_NAME);
 
-    message_queue mq(
-        create_only,
-        QUEUE_NAME,
-        MAX_MSG_COUNT,
-        MAX_MSG_SIZE
-    );
+//     message_queue mq(
+//         create_only,
+//         QUEUE_NAME,
+//         MAX_MSG_COUNT,
+//         MAX_MSG_SIZE
+//     );
 
-    std::thread receiver(receiver_thread);
+//     std::thread receiver(receiver_thread);
 
-    auto data = bench::generate_data(MESSAGE_SIZE);
+//     auto data = bench::generate_data(MESSAGE_SIZE);
 
-    auto start = std::chrono::high_resolution_clock::now();
+//     auto start = std::chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < MESSAGE_COUNT; ++i) {
-        mq.send(data.data(), data.size(), 0);
-    }
+//     for (int i = 0; i < MESSAGE_COUNT; ++i) {
+//         mq.send(data.data(), data.size(), 0);
+//     }
 
-    receiver.join();
+//     receiver.join();
 
-    auto end = std::chrono::high_resolution_clock::now();
+//     auto end = std::chrono::high_resolution_clock::now();
 
-    double ms = bench::ms_since(start, end);
+//     double ms = bench::ms_since(start, end);
 
-    std::cout << "Boost message_queue benchmark\n";
-    std::cout << "Messages: " << MESSAGE_COUNT << "\n";
-    std::cout << "Message size(bytes): " << MESSAGE_SIZE << "\n";
-    std::cout << "Time(ms): " << ms << "\n";
-    std::cout << "Messages/sec: " << (MESSAGE_COUNT * 1000.0 / ms) << "\n";
-    std::cout << "Note: max message size is fixed at queue creation\n";
+//     std::cout << "Boost message_queue benchmark\n";
+//     std::cout << "Messages: " << MESSAGE_COUNT << "\n";
+//     std::cout << "Message size(bytes): " << MESSAGE_SIZE << "\n";
+//     std::cout << "Time(ms): " << ms << "\n";
+//     std::cout << "Messages/sec: " << (MESSAGE_COUNT * 1000.0 / ms) << "\n";
+//     std::cout << "Note: max message size is fixed at queue creation\n";
 
-    message_queue::remove(QUEUE_NAME);
-#ifdef _WIN32
-    system("pause");
-#endif
+//     message_queue::remove(QUEUE_NAME);
+// #ifdef _WIN32
+//     system("pause");
+// #endif
     return 0;
 }

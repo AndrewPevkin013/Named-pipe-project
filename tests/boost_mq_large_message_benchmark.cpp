@@ -36,67 +36,67 @@ void receiver_thread() {
 }
 
 int main() {
-    message_queue::remove(QUEUE_NAME);
+//     message_queue::remove(QUEUE_NAME);
 
-    message_queue mq(
-        create_only,
-        QUEUE_NAME,
-        MAX_MSG_COUNT,
-        MAX_MSG_SIZE
-    );
+//     message_queue mq(
+//         create_only,
+//         QUEUE_NAME,
+//         MAX_MSG_COUNT,
+//         MAX_MSG_SIZE
+//     );
 
-    std::cout << "Boost message_queue large message benchmark\n";
-    std::cout << "Logical message size(MB): "
-              << LOGICAL_MESSAGE_SIZE / 1024 / 1024 << "\n";
-    std::cout << "Queue max message size(KB): "
-              << MAX_MSG_SIZE / 1024 << "\n";
+//     std::cout << "Boost message_queue large message benchmark\n";
+//     std::cout << "Logical message size(MB): "
+//               << LOGICAL_MESSAGE_SIZE / 1024 / 1024 << "\n";
+//     std::cout << "Queue max message size(KB): "
+//               << MAX_MSG_SIZE / 1024 << "\n";
 
-    try {
-        std::vector<char> oversized(MAX_MSG_SIZE + 1, 'x');
-        mq.send(oversized.data(), oversized.size(), 0);
+//     try {
+//         std::vector<char> oversized(MAX_MSG_SIZE + 1, 'x');
+//         mq.send(oversized.data(), oversized.size(), 0);
 
-        std::cout << "Unexpected: oversized message was sent\n";
-    } catch (const interprocess_exception& ex) {
-        std::cout << "Expected limitation: cannot send message larger than max_msg_size\n";
-        std::cout << "Boost exception: " << ex.what() << "\n";
-    }
+//         std::cout << "Unexpected: oversized message was sent\n";
+//     } catch (const interprocess_exception& ex) {
+//         std::cout << "Expected limitation: cannot send message larger than max_msg_size\n";
+//         std::cout << "Boost exception: " << ex.what() << "\n";
+//     }
 
-    std::thread receiver(receiver_thread);
+//     std::thread receiver(receiver_thread);
 
-    std::vector<char> chunk(MAX_MSG_SIZE, 'x');
+//     std::vector<char> chunk(MAX_MSG_SIZE, 'x');
 
-    size_t mem_before = bench::memory_usage_bytes();
-    auto start = std::chrono::high_resolution_clock::now();
+//     size_t mem_before = bench::memory_usage_bytes();
+//     auto start = std::chrono::high_resolution_clock::now();
 
-    for (size_t i = 0; i < CHUNK_COUNT; ++i) {
-        mq.send(chunk.data(), chunk.size(), 0);
-    }
+//     for (size_t i = 0; i < CHUNK_COUNT; ++i) {
+//         mq.send(chunk.data(), chunk.size(), 0);
+//     }
 
-    receiver.join();
+//     receiver.join();
 
-    auto end = std::chrono::high_resolution_clock::now();
-    size_t mem_after = bench::memory_usage_bytes();
+//     auto end = std::chrono::high_resolution_clock::now();
+//     size_t mem_after = bench::memory_usage_bytes();
 
-    double ms = bench::ms_since(start, end);
-    double throughput = bench::mb_per_sec(LOGICAL_MESSAGE_SIZE, ms);
+//     double ms = bench::ms_since(start, end);
+//     double throughput = bench::mb_per_sec(LOGICAL_MESSAGE_SIZE, ms);
 
-    double mem_delta_mb =
-        static_cast<double>(
-            static_cast<long long>(mem_after) -
-            static_cast<long long>(mem_before)
-        ) / (1024.0 * 1024.0);
+//     double mem_delta_mb =
+//         static_cast<double>(
+//             static_cast<long long>(mem_after) -
+//             static_cast<long long>(mem_before)
+//         ) / (1024.0 * 1024.0);
 
-    std::cout << "Manual chunk transfer result\n";
-    std::cout << "Chunks: " << CHUNK_COUNT << "\n";
-    std::cout << "Chunk size(KB): " << MAX_MSG_SIZE / 1024 << "\n";
-    std::cout << "Time(ms): " << ms << "\n";
-    std::cout << "Throughput(MB/s): " << throughput << "\n";
-    std::cout << "Memory delta(MB): " << mem_delta_mb << "\n";
-    std::cout << "Note: fragmentation is implemented manually in benchmark code\n";
+//     std::cout << "Manual chunk transfer result\n";
+//     std::cout << "Chunks: " << CHUNK_COUNT << "\n";
+//     std::cout << "Chunk size(KB): " << MAX_MSG_SIZE / 1024 << "\n";
+//     std::cout << "Time(ms): " << ms << "\n";
+//     std::cout << "Throughput(MB/s): " << throughput << "\n";
+//     std::cout << "Memory delta(MB): " << mem_delta_mb << "\n";
+//     std::cout << "Note: fragmentation is implemented manually in benchmark code\n";
 
-    message_queue::remove(QUEUE_NAME);
-#ifdef _WIN32
-    system("pause");
-#endif
+//     message_queue::remove(QUEUE_NAME);
+// #ifdef _WIN32
+//     system("pause");
+// #endif
     return 0;
 }

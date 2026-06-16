@@ -54,9 +54,6 @@ bool MessageAssembler::add_fragment(const Fragment& fragment) {
     state.received[index] = true;
     state.received_count++;
     
-    if (state.received_count % 10 == 0 || state.is_complete()) {
-        std::cout << "[Assembler] Message " << fragment.header.message_id << ": " << state.received_count << "/" << state.total_fragments << " fragments received" << std::endl;
-    }
     
     return state.is_complete();
 }
@@ -126,12 +123,6 @@ MessageAssembler::AssembledMessage MessageAssembler::get_assembled_message(uint1
 
         return result;
     }
-
-    std::cout << "[Assembler] Message "
-              << message_id
-              << " assembled successfully ("
-              << result.data.size()
-              << " bytes)\n";
 
     assembly_map_.erase(it);
 

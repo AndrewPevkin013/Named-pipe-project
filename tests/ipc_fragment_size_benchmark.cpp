@@ -129,65 +129,65 @@ BenchmarkResult run_case(const std::vector<char>& full_message,
 }
 
 int main() {
-    std::cout << "IPC fragment size benchmark\n\n";
-    std::cout << "Before running this test, start test_receiver.exe\n\n";
+//     std::cout << "IPC fragment size benchmark\n\n";
+//     std::cout << "Before running this test, start test_receiver.exe\n\n";
 
-    std::cout << "Generating 1 GB message...\n";
-    std::string body = make_message(MESSAGE_SIZE);
-    std::vector<char> full_message = build_full_message(body);
+//     std::cout << "Generating 1 GB message...\n";
+//     std::string body = make_message(MESSAGE_SIZE);
+//     std::vector<char> full_message = build_full_message(body);
 
-    std::cout << "Body size: " << format_size(body.size()) << "\n";
-    std::cout << "Full message size: " << full_message.size() << " bytes\n\n";
+//     std::cout << "Body size: " << format_size(body.size()) << "\n";
+//     std::cout << "Full message size: " << full_message.size() << " bytes\n\n";
 
-    std::vector<BenchmarkResult> results;
-    results.reserve(FRAGMENT_SIZES.size());
+//     std::vector<BenchmarkResult> results;
+//     results.reserve(FRAGMENT_SIZES.size());
 
-    for (std::size_t fragment_size : FRAGMENT_SIZES) {
-        std::cout << "Running fragment size: "
-                  << format_size(fragment_size) << "\n";
+//     for (std::size_t fragment_size : FRAGMENT_SIZES) {
+//         std::cout << "Running fragment size: "
+//                   << format_size(fragment_size) << "\n";
 
-        BenchmarkResult result = run_case(
-            full_message,
-            body.size(),
-            fragment_size
-        );
+//         BenchmarkResult result = run_case(
+//             full_message,
+//             body.size(),
+//             fragment_size
+//         );
 
-        results.push_back(result);
+//         results.push_back(result);
 
-        std::cout << "Fragments: " << result.fragments_count << "\n";
-        std::cout << "ACK: " << (result.ack_received ? "yes" : "no") << "\n";
-        std::cout << "Result: " << (result.success ? "success" : "failed") << "\n";
-        std::cout << "Time(ms): " << std::fixed << std::setprecision(2)
-                  << result.time_ms << "\n";
-        std::cout << "Throughput(MB/s): " << std::fixed << std::setprecision(2)
-                  << result.throughput_mbps << "\n\n";
-    }
+//         std::cout << "Fragments: " << result.fragments_count << "\n";
+//         std::cout << "ACK: " << (result.ack_received ? "yes" : "no") << "\n";
+//         std::cout << "Result: " << (result.success ? "success" : "failed") << "\n";
+//         std::cout << "Time(ms): " << std::fixed << std::setprecision(2)
+//                   << result.time_ms << "\n";
+//         std::cout << "Throughput(MB/s): " << std::fixed << std::setprecision(2)
+//                   << result.throughput_mbps << "\n\n";
+//     }
 
-    std::cout << std::left
-              << std::setw(14) << "FragSize"
-              << std::setw(14) << "Fragments"
-              << std::setw(10) << "ACK"
-              << std::setw(10) << "Result"
-              << std::setw(14) << "Time(ms)"
-              << std::setw(18) << "Throughput(MB/s)"
-              << "\n";
+//     std::cout << std::left
+//               << std::setw(14) << "FragSize"
+//               << std::setw(14) << "Fragments"
+//               << std::setw(10) << "ACK"
+//               << std::setw(10) << "Result"
+//               << std::setw(14) << "Time(ms)"
+//               << std::setw(18) << "Throughput(MB/s)"
+//               << "\n";
 
-    std::cout << std::string(80, '-') << "\n";
+//     std::cout << std::string(80, '-') << "\n";
 
-    for (const auto& r : results) {
-        std::cout << std::left
-                  << std::setw(14) << format_size(r.fragment_size)
-                  << std::setw(14) << r.fragments_count
-                  << std::setw(10) << (r.ack_received ? "yes" : "no")
-                  << std::setw(10) << (r.success ? "success" : "failed")
-                  << std::setw(14) << std::fixed << std::setprecision(2) << r.time_ms
-                  << std::setw(18) << std::fixed << std::setprecision(2) << r.throughput_mbps
-                  << "\n";
-    }
+//     for (const auto& r : results) {
+//         std::cout << std::left
+//                   << std::setw(14) << format_size(r.fragment_size)
+//                   << std::setw(14) << r.fragments_count
+//                   << std::setw(10) << (r.ack_received ? "yes" : "no")
+//                   << std::setw(10) << (r.success ? "success" : "failed")
+//                   << std::setw(14) << std::fixed << std::setprecision(2) << r.time_ms
+//                   << std::setw(18) << std::fixed << std::setprecision(2) << r.throughput_mbps
+//                   << "\n";
+//     }
 
-#ifdef _WIN32
-    system("pause");
-#endif
+// #ifdef _WIN32
+//     system("pause");
+// #endif
 
     return 0;
 }

@@ -23,6 +23,7 @@ namespace IPC {
         uint32_t message_checksum;
         uint8_t flags;
         uint8_t reserved[7];
+        char channel_name[64];
 
         void set_last(bool last) {
             if (last) flags |= 0x01;
@@ -39,7 +40,7 @@ namespace IPC {
     
     constexpr size_t MIN_FRAGMENT_SIZE = 1;
     // constexpr size_t MAX_FRAGMENT_SIZE = 64 * 1024;
-    constexpr size_t MAX_FRAGMENT_SIZE = 100 * 1024 * 1024; // изменил порог для проверки передачи фрагментов по 50 МБ (для тестов)
+    constexpr size_t MAX_FRAGMENT_SIZE = 100 * 1024 * 1024;
     constexpr size_t HEADER_SIZE = sizeof(FragmentHeader);
     static_assert(sizeof(FragmentHeader) == HEADER_SIZE, "FragmentHeader size mismatch");
 
