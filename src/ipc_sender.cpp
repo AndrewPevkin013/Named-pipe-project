@@ -149,14 +149,6 @@ bool IPCSender::connect()
 
 bool IPCSender::send(const std::vector<uint8_t>& data)
 {
-// #ifdef _WIN32
-//     if (pipe_ == INVALID_HANDLE_VALUE)
-//         return false;
-// #else
-//     if (write_fd_ == -1)
-//         return false;
-// #endif
-
     std::lock_guard<std::mutex> lock(send_mutex_);
 
     if (!ensure_connected())

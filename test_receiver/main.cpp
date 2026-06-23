@@ -15,7 +15,7 @@ int main()
     server.set_message_handler([](const IPCReceiver::Message& msg) {
         std::string text(msg.data.begin(), msg.data.end());
 
-        std::cout << "\nReceived message:\n";
+        std::cout << "Received message:\n";
         std::cout << "ID: " << msg.message_id << "\n";
         std::cout << "Size: " << msg.data.size() << "\n";
         std::cout << "Content: " << text << "\n";
